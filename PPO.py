@@ -29,4 +29,12 @@ class PPO:
         model = tf.keras.models.Model(inputs=[state_input, advantages, old_prediction], outputs=action_probs)
         return model
 
+    def build_critic(self):
+        state_input = Input(shape=(self.state_dim,))
+        x = Dense(64, activation='relu')(state_input)
+        x = Dense(64, activation='relu')(x)
+        values = Dense(1)(x)
+
+        model = tf.keras.models.Model(inputs=state_input, outputs=values)
+        return model
 
