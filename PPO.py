@@ -18,16 +18,18 @@ class PPO:
         critic_optimizer (Adam): Optimizer for the critic network.
     """
     
-    def __init__(self, state_dim, action_dim, actor_lr, critic_lr, clip_ratio):
+    def __init__(self, state_dim: int, action_dim: int, actor_lr: float, critic_lr: float, clip_ratio: float):
         self.state_dim = state_dim
         self.action_dim = action_dim
         self.actor_lr = actor_lr
         self.critic_lr = critic_lr
         self.clip_ratio = clip_ratio
 
+        # Build the actor and critic networks.
         self.actor = self.build_actor()
         self.critic = self.build_critic()
         
+        # Define optimizers for both networks.
         self.actor_optimizer = Adam(learning_rate=self.actor_lr)
         self.critic_optimizer = Adam(learning_rate=self.critic_lr)
 
