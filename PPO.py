@@ -1,9 +1,10 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import Model
+
 
 class PPO:
-
     def __init__(self, state_dim, action_dim, actor_lr, critic_lr, clip_ratio):
         self.state_dim = state_dim
         self.action_dim = action_dim
