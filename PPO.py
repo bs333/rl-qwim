@@ -66,8 +66,17 @@ class PPO:
         model = tf.keras.models.Model(inputs=state_input, outputs=values)
         return model
 
-    def policy_loss(self, advantages, old_prediction, action_probs):
-        # Define the loss function that will be used to train the actor
+    def policy_loss(self, advantages: tf.Tensor, old_prediction: tf.Tensor, action_probs: tf.Tensor) -> tf.Tensor:        
+        """Defines the policy loss function to be used for training the actor.
+
+        Args:
+            advantages (tf.Tensor): The advantages for each action.
+            old_prediction (tf.Tensor): The action probabilities from the old policy.
+            action_probs (tf.Tensor): The action probabilities from the current policy.
+
+        Returns:
+            tf.Tensor: The computed policy loss.
+        """
         pass
 
     def value_loss(self, rewards, values):
