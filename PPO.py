@@ -79,8 +79,16 @@ class PPO:
         """
         pass
 
-    def value_loss(self, rewards, values):
-        # Define the loss function that will be used to train the critic
+    def value_loss(self, rewards: tf.Tensor, values: tf.Tensor) -> tf.Tensor:
+        """Defines the value loss function to be used for training the critic.
+
+        Args:
+            rewards (tf.Tensor): The rewards obtained from the environment.
+            values (tf.Tensor): The predicted values from the critic network.
+
+        Returns:
+            tf.Tensor: The computed value loss.
+        """
         pass
 
     def train(self, states, actions, rewards, next_states, dones):
