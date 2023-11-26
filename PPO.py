@@ -39,7 +39,7 @@ class PPO:
         Returns:
             Model: A compiled actor model.
         """
-        
+
         state_input = Input(shape=(self.state_dim,))
         advantages = Input(shape=(1,))
         old_prediction = Input(shape=(self.action_dim,))
@@ -51,7 +51,13 @@ class PPO:
         model = tf.keras.models.Model(inputs=[state_input, advantages, old_prediction], outputs=action_probs)
         return model
 
-    def build_critic(self):
+    def build_critic(self) -> Model:
+        """Builds the critic network.
+
+        Returns:
+            Model: A compiled critic model.
+        """
+
         state_input = Input(shape=(self.state_dim,))
         x = Dense(64, activation='relu')(state_input)
         x = Dense(64, activation='relu')(x)
