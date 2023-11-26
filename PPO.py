@@ -33,7 +33,13 @@ class PPO:
         self.actor_optimizer = Adam(learning_rate=self.actor_lr)
         self.critic_optimizer = Adam(learning_rate=self.critic_lr)
 
-    def build_actor(self):
+    def build_actor(self) -> Model:
+        """Builds the actor network.
+
+        Returns:
+            Model: A compiled actor model.
+        """
+        
         state_input = Input(shape=(self.state_dim,))
         advantages = Input(shape=(1,))
         old_prediction = Input(shape=(self.action_dim,))
