@@ -3,8 +3,21 @@ from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Model
 
-
 class PPO:
+    """Proximal Policy Optimization (PPO) agent with separate actor and critic networks.
+    
+    Attributes:
+        state_dim (int): Dimensionality of the state space.
+        action_dim (int): Dimensionality of the action space.
+        actor_lr (float): Learning rate for the actor model.
+        critic_lr (float): Learning rate for the critic model.
+        clip_ratio (float): PPO clipping parameter.
+        actor (Model): Actor network for policy approximation.
+        critic (Model): Critic network for value approximation.
+        actor_optimizer (Adam): Optimizer for the actor network.
+        critic_optimizer (Adam): Optimizer for the critic network.
+    """
+    
     def __init__(self, state_dim, action_dim, actor_lr, critic_lr, clip_ratio):
         self.state_dim = state_dim
         self.action_dim = action_dim
