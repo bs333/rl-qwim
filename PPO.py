@@ -46,4 +46,11 @@ class PPO:
         # Define the loss function that will be used to train the critic
         pass
 
+    def train(self, states, actions, rewards, next_states, dones):
+        # Convert data into tensors
+        # Compute advantages
+        # Train actor and critic models using mini-batch updates
+        pass
+
+
 
