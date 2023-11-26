@@ -42,3 +42,8 @@ class PPO:
         # Define the loss function that will be used to train the actor
         pass
 
+    def value_loss(self, rewards, values):
+        # Define the loss function that will be used to train the critic
+        pass
+
+
