@@ -1,11 +1,3 @@
-import numpy as np
-
-class Memory:
-    
-    def __init__(self, batch_size):
-        self.states = []
-        self.probs = []
-        self.vals = []
-        self.actions = []
-        self.rewards = []
-        self.batch_size = []
+import tensorflow as tf
+from tensorflow.keras.layers import Input, Dense
+from tensorflow.keras.optimizers import Adam
