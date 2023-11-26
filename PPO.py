@@ -91,10 +91,16 @@ class PPO:
         """
         pass
 
-    def train(self, states, actions, rewards, next_states, dones):
-        # Convert data into tensors
-        # Compute advantages
-        # Train actor and critic models using mini-batch updates
+    def train(self, states: tf.Tensor, actions: tf.Tensor, rewards: tf.Tensor, next_states: tf.Tensor, dones: tf.Tensor):
+        """Implements the training loop for the PPO agent.
+
+        Args:
+            states (tf.Tensor): Batch of states.
+            actions (tf.Tensor): Batch of actions.
+            rewards (tf.Tensor): Batch of rewards.
+            next_states (tf.Tensor): Batch of next states.
+            dones (tf.Tensor): Batch of done flags indicating the end of an episode.
+        """
         pass
 
 
