@@ -135,20 +135,37 @@ class PortfolioOptimization:
 
         self.data['Normalized_Close'] = normalized_data
 
-    def calculate_reward(self, action, current_state, next_state):
+    def calculate_reward(self, action: np.ndarray, current_prices: np.ndarray, risk_free_rate: float = 0.0) -> float:
         """
-        Calculates the reward based on the chosen action and state transition.
-        
+        Calculates the reward based on the Sortino Ratio for the given action and current market prices.
+
         Args:
-            action (np.ndarray): The action taken by the agent.
-            current_state (np.ndarray): The current state of the environment.
-            next_state (np.ndarray): The next state of the environment after taking the action.
+            action (np.ndarray): The action taken by the agent, representing the portfolio allocation.
+            current_prices (np.ndarray): Current market prices of the assets.
+            risk_free_rate (float): The risk-free rate for the period, default is 0.0.
 
         Returns:
-            float: The calculated reward.
+            float: The calculated reward based on the Sortino Ratio.
         """
-        # Implement reward calculation logic here
-        pass
+        # Ensure the action sums up to 1 (100% of the portfolio).
+        normalized_action = action / np.sum(action)
+
+        # Calculate portfolio return.
+        # Assuming current_prices are relative changes (e.g., today's price / yesterday's price)
+        portfolio_return = np.sum(normalized_action * current_prices) - 1
+
+        # Calculate the downside deviation (only consider negative returns).
+        negative_returns = [min(0, r - risk_free_rate) for r in current_prices]
+        downside_deviation = np.sqrt(np.mean(np.square(negative_returns)))
+
+        # Avoid division by zero in case of no downside risk.
+        if downside_deviation == 0:
+            downside_deviation = 1e-6
+
+        # Calculate the Sortino Ratio.
+        sortino_ratio = (portfolio_return - risk_free_rate) / downside_deviation
+
+        return sortino_ratio
 
 if __name__ == '__main__':
     # List of ETF tickers.
