@@ -271,6 +271,18 @@ class PPO:
         # Convert the tensor array to a regular tensor before returning.
         return advantages.stack()
 
+    def predict_action(self, state: tf.Tensor) -> tf.Tensor:
+        """
+        Predicts action probabilities using the actor model with only state input.
+
+        Args:
+            state (tf.Tensor): Current state tensor.
+
+        Returns:
+            tf.Tensor: Action probabilities.
+        """
+
+
     def select_action(self, state: np.ndarray) -> int:
         """
         Selects an action based on the current state using the actor model.
