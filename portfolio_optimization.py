@@ -86,7 +86,7 @@ class PortfolioOptimization:
             print(f'   {key}: {value:.3f}')
         print()
     
-    def split_data(self, split_date: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    def split_data(self, split_date: str):
         """
         Splits the data into training and testing sets based on a specified date.
 
@@ -98,6 +98,7 @@ class PortfolioOptimization:
         """
         train_data = self.data[:split_date]
         test_data = self.data[split_date:]
+
         return train_data, test_data
 
 
