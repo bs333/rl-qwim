@@ -13,3 +13,18 @@ class PortfolioOptimization:
         end_date (str): End date for data retrieval.
         data (pd.DataFrame): Dataframe holding the financial data.
     """
+
+    def __init__(self, tickers: list, start_date: str, end_date: str):
+        """
+        Initializes the PortfolioOptimization class with given tickers and date range.
+
+        Args:
+            tickers (List[str]): List of ticker symbols.
+            start_date (str): Start date in 'YYYY-MM-DD' format.
+            end_date (str): End date in 'YYYY-MM-DD' format.
+        """
+        self.tickers = tickers
+        self.start_date = start_date
+        self.end_date = end_date
+        self.data = None
+
