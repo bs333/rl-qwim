@@ -108,7 +108,7 @@ class PPO:
 
         return model
 
-    def policy_loss(advantages: tf.Tensor, old_probs: tf.Tensor, actions: tf.Tensor, new_probs: tf.Tensor, clip_ratio: float) -> tf.Tensor:
+    def policy_loss(self, advantages: tf.Tensor, old_probs: tf.Tensor, actions: tf.Tensor, new_probs: tf.Tensor, clip_ratio: float) -> tf.Tensor:
         """
         Computes the PPO policy loss.
 
@@ -143,7 +143,7 @@ class PPO:
 
         return loss
 
-    def value_loss(predicted_values: tf.Tensor, target_values: tf.Tensor) -> tf.Tensor:
+    def value_loss(self, predicted_values: tf.Tensor, target_values: tf.Tensor) -> tf.Tensor:
         """
         Computes the value loss for the critic network.
 
