@@ -224,7 +224,21 @@ class PPO:
         Returns:
             tf.Tensor: Tensor of discounted rewards for each time step.
         """
-        pass
+        # Initialize a tensor array to store the discounted rewards, which will be dynamically sized.
+        discounted_rewards = tf.TensorArray(dtype=tf.float32, size=0, dynamic_size=True)
+        reward_sum = 0.0  # Variable to store the accumulated reward
+
+        # Loop through the rewards array in reverse order to calculate discounted rewards.
+        for t in reversed(range(len(rewards))):
+            # If the episode ended, the reward_sum is reset to 0. Otherwise, it accumulates discounted rewards.
+            reward_sum = rewards[t] + gamma * reward_sum * (1 - dones[t])
+
+            # Write the calculated reward_sum to the corresponding position in the tensor array.
+            discounted_rewards = discounted_rewards.write(t, reward_sum)
+
+        # Convert the tensor array to a regular tensor before returning.
+        return discounted_rewards.stack()
+
 
     def calculate_advantages(self, rewards: tf.Tensor, values: tf.Tensor, next_values: tf.Tensor, dones: tf.Tensor) -> tf.Tensor:
         # Implement logic to calculate advantages
