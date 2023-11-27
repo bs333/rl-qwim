@@ -176,7 +176,6 @@ class PortfolioOptimization:
 
         # Calculate the Sortino Ratio.
         risk_free_rate = self.get_current_risk_free_rate()
-
         sortino_ratio = (portfolio_return - risk_free_rate) / downside_deviation
 
         return sortino_ratio
@@ -285,6 +284,17 @@ class PortfolioOptimization:
         reward = self.calculate_reward(normalized_action, price_change)
 
         return next_state, reward, done
+
+    def evaluate_agent(self, test_data: pd.DataFrame, ppo_agent: PPO, risk_free_rate: float = 0.0):
+        """
+        Evaluates the PPO agent using the testing dataset.
+
+        Args:
+            test_data (pd.DataFrame): The testing dataset.
+            ppo_agent (PPO): The trained PPO agent.
+            risk_free_rate (float): The risk-free rate for calculating risk-adjusted returns.
+        """
+
 
 if __name__ == '__main__':
     # List of ETF tickers.
