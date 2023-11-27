@@ -170,6 +170,24 @@ class PPO:
             next_states (np.ndarray): Batch of next states.
             dones (np.ndarray): Batch of done flags (boolean) indicating the end of an episode.
         """
+
+        # Convert numpy arrays to TensorFlow tensors.
+        states = tf.convert_to_tensor(states, dtype=tf.float32)
+        actions = tf.convert_to_tensor(actions, dtype=tf.int32)
+        rewards = tf.convert_to_tensor(rewards, dtype=tf.float32)
+        next_states = tf.convert_to_tensor(next_states, dtype=tf.float32)
+        dones = tf.convert_to_tensor(dones, dtype=tf.float32)
+
+        # Calculate discounted rewards (targets for the value function).
+        target_values = self.calculate_discounted_rewards(rewards, dones)
+
+        # Compute the value of current and next states.
+        values = self.critic(states)
+        next_values = self.critic(next_states)
+
+        # Compute advantages.
+        advantages = self.calculate_advantages(rewards, values, next_values, dones)
+
         pass
 
 
