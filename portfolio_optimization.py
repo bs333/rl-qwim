@@ -120,6 +120,12 @@ class PortfolioOptimization:
         # This could be daily returns, Sharpe ratio, etc.
         self.reward_function = self.calculate_reward  # Placeholder for reward function method
 
+    def normalize_data(self):
+        """
+        Normalizes the financial data, preparing it for use in the state representation.
+        """
+        # Implement data normalization logic here (e.g., Min-Max scaling, Z-score normalization)
+
 
 if __name__ == '__main__':
     # List of ETF tickers.
