@@ -103,6 +103,24 @@ class PortfolioOptimization:
 
         return train_data, test_data
 
+    def setup_environment(self):
+        """
+        Setup the environment for the PPO algorithm.
+        This involves defining the state space, action space, and reward function.
+        """
+        # Example state space: window of past N days of normalized log returns
+        self.state_window = 60  # Last 60 days of data
+        self.normalize_data()   # Method to normalize data (to be implemented)
+
+        # Example action space: allocation percentages for each ETF
+        self.num_assets = len(self.tickers)
+        self.action_space = np.linspace(0, 1, num=self.num_assets)  # Simple discrete allocation for each asset
+
+        # Define the reward structure (to be implemented in a separate method)
+        # This could be daily returns, Sharpe ratio, etc.
+        self.reward_function = self.calculate_reward  # Placeholder for reward function method
+
+
 if __name__ == '__main__':
     # List of ETF tickers.
     tickers = ["IWF", "EEM", "SHYG", "MTUM"]
