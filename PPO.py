@@ -75,7 +75,7 @@ class PPO:
     def build_critic(self) -> Model:
         """
         Builds the critic network which estimates the value function.
-    
+        
         The critic network assesses the value of being in a given state, which is critical for the actor's
         policy improvement. It helps in evaluating how good the state is by predicting the expected sum of rewards,
         also known as the state's value.
@@ -84,12 +84,27 @@ class PPO:
             Model: A compiled critic model that predicts state value.
         """
 
-        state_input = Input(shape=(self.state_dim,))
-        x = Dense(64, activation='relu')(state_input)
-        x = Dense(64, activation='relu')(x)
-        values = Dense(1)(x)
+        # Define the input layer for the state space, which receives the state of the environment.
+        # The critic uses this to evaluate the potential return from this state.
+        state_input = Input(shape=(self.state_dim,), name='state_input')
 
-        model = tf.keras.models.Model(inputs=state_input, outputs=values)
+        # The first hidden layer takes the state as input and processes it through 64 units with ReLU activation.
+        # ReLU is used to add non-linearity to the model, allowing it to learn more complex patterns.
+        x = Dense(64, activation='relu', name='critic_hidden_layer_1')(state_input)
+
+        # The second hidden layer continues processing the data from the first hidden layer.
+        # Another layer of 64 units with ReLU activation is used here for further transformation.
+        x = Dense(64, activation='relu', name='critic_hidden_layer_2')(x)
+
+        # The output layer provides a single value as output with no activation function.
+        # This value represents the critic's estimate of the value function for the input state.
+        values = Dense(1, name='state_value')(x)
+
+        # Construct the critic model with state input and the value output.
+        # The critic will be trained to minimize the difference between predicted values and actual returns,
+        # thus learning to accurately estimate the value function.
+        model = tf.keras.models.Model(inputs=state_input, outputs=values, name='critic_model')
+        
         return model
 
     def policy_loss(self, advantages: tf.Tensor, old_prediction: tf.Tensor, action_probs: tf.Tensor) -> tf.Tensor:        
