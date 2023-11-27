@@ -281,7 +281,13 @@ class PPO:
         Returns:
             tf.Tensor: Action probabilities.
         """
+        # Extract the necessary layers from the actor model.
+        # Assuming self.actor is the existing actor model.
+        x = self.actor.layers[1](state)  # First hidden layer (after input layer)
+        x = self.actor.layers[2](x)      # Second hidden layer
+        action_probs = self.actor.layers[3](x)  # Output layer
 
+        return action_probs
 
     def select_action(self, state: np.ndarray) -> int:
         """
