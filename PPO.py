@@ -153,7 +153,10 @@ class PPO:
         Returns:
             tf.Tensor: The computed value loss.
         """
-        pass
+        # Use MSE as loss function for the critic.
+        loss = tf.reduce_mean((predicted_values - target_values) ** 2)
+
+        return loss
 
     def train(self, states: tf.Tensor, actions: tf.Tensor, rewards: tf.Tensor, next_states: tf.Tensor, dones: tf.Tensor):
         """Implements the training loop for the PPO agent.
