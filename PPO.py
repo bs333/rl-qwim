@@ -73,10 +73,15 @@ class PPO:
         return model
 
     def build_critic(self) -> Model:
-        """Builds the critic network.
+        """
+        Builds the critic network which estimates the value function.
+    
+        The critic network assesses the value of being in a given state, which is critical for the actor's
+        policy improvement. It helps in evaluating how good the state is by predicting the expected sum of rewards,
+        also known as the state's value.
 
         Returns:
-            Model: A compiled critic model.
+            Model: A compiled critic model that predicts state value.
         """
 
         state_input = Input(shape=(self.state_dim,))
