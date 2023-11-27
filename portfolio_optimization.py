@@ -223,27 +223,19 @@ class PortfolioOptimization:
     def reset_environment(self):
         """
         Initializes the environment to an initial state at the start of an episode.
-
-        The initial state is typically a window of historical data that the agent uses to make its first decision.
+        Also returns the starting index in the dataset for this episode.
 
         Returns:
-            np.ndarray: The initial state of the environment.
+            initial_state (np.ndarray): The initial state of the environment.
+            start_index (int): The starting index in the dataset for this episode.
         """
-        # Choose a random starting point in the data (ensure enough data is available for the initial state).
         max_start_index = len(self.data) - self.state_window
         start_index = random.randint(0, max_start_index)
 
-        # Extract the state window of data starting from the chosen index.
         initial_state_data = self.data.iloc[start_index:start_index + self.state_window]
+        initial_state = initial_state_data['Normalized_Close'].values.flatten()
 
-        # Prepare the state representation.
-        # Assuming 'Normalized_Close' contains the normalized closing prices
-        initial_state = initial_state_data['Normalized_Close'].values
-
-        # Flatten the state to fit into the PPO input.
-        initial_state_flattened = initial_state.flatten()
-
-        return initial_state_flattened
+        return initial_state, start_index
 
     def execute_action(self, action: np.ndarray, current_index: int) -> (np.ndarray, float, bool):
         """
