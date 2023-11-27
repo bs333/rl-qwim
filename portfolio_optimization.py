@@ -183,7 +183,7 @@ class PortfolioOptimization:
         ppo_agent = PPO(self.state_window * len(self.tickers), self.num_assets, actor_lr, critic_lr, clip_ratio)
 
         for episode in range(episodes):
-            state = self.reset_environment()  # Reset the environment at the start of each episode.
+            state, current_index = self.reset_environment() # Reset the environment at the start of each episode.
             total_reward = 0
 
             states, actions, rewards, next_states, dones = [], [], [], [], []
@@ -193,7 +193,8 @@ class PortfolioOptimization:
                 action = ppo_agent.select_action(state)
 
                 # Execute the action and get the next state and reward.
-                next_state, reward, done = self.execute_action(action)
+                next_state, reward, done, next_index = self.execute_action(action)
+                current_index = next_index  # Update the index for the next iteration
 
                 # Store this transition.
                 states.append(state)
