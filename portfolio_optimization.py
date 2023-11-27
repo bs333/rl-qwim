@@ -27,4 +27,11 @@ class PortfolioOptimization:
         self.start_date = start_date
         self.end_date = end_date
         self.data = None
+    
+    def load_data(self):
+        """
+        Loads financial data from Yahoo Finance for the specified tickers and date range.
+        """
+        self.data = yf.download(self.tickers, start=self.start_date, end=self.end_date)
+
 
