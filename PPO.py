@@ -271,4 +271,22 @@ class PPO:
         # Convert the tensor array to a regular tensor before returning.
         return advantages.stack()
 
+    def select_action(self, state: np.ndarray) -> int:
+        """
+        Selects an action based on the current state using the actor model.
+
+        Args:
+            state (np.ndarray): The current state.
+
+        Returns:
+            int: The selected action.
+        """
+
+        state = tf.convert_to_tensor([state], dtype=tf.float32)
+        action_probs = self.actor(state)
+        action = np.random.choice(self.action_dim, p=np.squeeze(action_probs))
+
+        return action
+
+
 
