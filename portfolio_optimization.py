@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
 import random
 
-import PPO
+from PPO import PPO
 
 class PortfolioOptimization:
     """
