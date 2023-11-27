@@ -167,6 +167,19 @@ class PortfolioOptimization:
 
         return sortino_ratio
 
+    def train_agent(self, episodes: int, actor_lr: float, critic_lr: float, clip_ratio: float, training_interval: int):
+        """
+        Trains the PPO agent over a specified number of episodes.
+
+        Args:
+            episodes (int): The number of episodes to train the agent.
+            actor_lr (float): Learning rate for the actor.
+            critic_lr (float): Learning rate for the critic.
+            clip_ratio (float): Clipping ratio for the PPO algorithm.
+            training_interval (int): Number of steps to run before updating the PPO agent.
+        """
+
+
 if __name__ == '__main__':
     # List of ETF tickers.
     tickers = ["IWF", "EEM", "SHYG", "MTUM"]
