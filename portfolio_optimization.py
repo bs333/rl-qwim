@@ -122,19 +122,17 @@ class PortfolioOptimization:
 
     def normalize_data(self):
         """
-        Normalizes the financial data using Min-Max scaling.
+        Normalizes the financial data using Z-score normalization.
 
-        This method scales each feature (e.g., closing prices of each ETF) to a range between 0 and 1.
+        This method scales each feature (e.g., closing prices of each ETF) based on its mean and standard deviation.
         """
-        # Assuming self.data is a DataFrame with closing prices
         closing_prices = self.data['Close']
 
-        # Apply Min-Max scaling
-        min_vals = closing_prices.min()
-        max_vals = closing_prices.max()
-        normalized_data = (closing_prices - min_vals) / (max_vals - min_vals)
+        # Apply Z-score normalization
+        mean_vals = closing_prices.mean()
+        std_vals = closing_prices.std()
+        normalized_data = (closing_prices - mean_vals) / std_vals
 
-        # Update self.data with normalized values
         self.data['Normalized_Close'] = normalized_data
 
     def calculate_reward(self, action, current_state, next_state):
