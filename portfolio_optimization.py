@@ -85,6 +85,21 @@ class PortfolioOptimization:
         for key, value in result[4].items():
             print(f'   {key}: {value:.3f}')
         print()
+    
+    def split_data(self, split_date: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        Splits the data into training and testing sets based on a specified date.
+
+        Args:
+            split_date (str): Date to split the data on in 'YYYY-MM-DD' format.
+
+        Returns:
+            Tuple[pd.DataFrame, pd.DataFrame]: Training and testing data sets.
+        """
+        train_data = self.data[:split_date]
+        test_data = self.data[split_date:]
+        return train_data, test_data
+
 
 
 
