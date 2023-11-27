@@ -142,13 +142,13 @@ class PPO:
 
         return loss
 
-    def value_loss(self, rewards: tf.Tensor, values: tf.Tensor) -> tf.Tensor:
+    def value_loss(predicted_values: tf.Tensor, target_values: tf.Tensor) -> tf.Tensor:
         """
-        Defines the value loss function to be used for training the critic.
+        Computes the value loss for the critic network.
 
         Args:
-            rewards (tf.Tensor): The rewards obtained from the environment.
-            values (tf.Tensor): The predicted values from the critic network.
+            predicted_values (tf.Tensor): The values predicted by the critic for the current states.
+            target_values (tf.Tensor): The discounted sum of rewards (return) or the target value.
 
         Returns:
             tf.Tensor: The computed value loss.
