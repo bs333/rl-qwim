@@ -121,7 +121,27 @@ class PPO:
         Returns:
             tf.Tensor: The computed policy loss.
         """
-        pass
+
+        # Convert actions to a one-hot encoding.
+        actions_one_hot = tf.one_hot(actions, depth=new_probs.shape[-1])
+
+        # Calculate the probability ratios.
+        probs = tf.reduce_sum(new_probs * actions_one_hot, axis=-1)
+        old_probs = tf.reduce_sum(old_probs * actions_one_hot, axis=-1)
+        ratio = tf.exp(tf.math.log(probs) - tf.math.log(old_probs))
+
+        # Evaluted the clipped function.
+        clipped_ratio = tf.clip_by_value(ratio, 1.0 - clip_ratio, 1.0 + clip_ratio)
+        clipped_surrogate = clipped_ratio * advantages
+
+        # Evaluate the unclipped function.
+        unclipped_surrogate = ratio * advantages
+
+        # Take the minimum of the clipped and unclipped surrogate functions to form the final objective function.
+        loss = -tf.reduce_mean(tf.minimum(unclipped_surrogate, clipped_surrogate))
+
+        return loss
+
 
     def value_loss(self, rewards: tf.Tensor, values: tf.Tensor) -> tf.Tensor:
         """
