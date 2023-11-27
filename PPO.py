@@ -239,7 +239,22 @@ class PPO:
         # Convert the tensor array to a regular tensor before returning.
         return discounted_rewards.stack()
 
+    def calculate_advantages(self, rewards: tf.Tensor, values: tf.Tensor, next_values: tf.Tensor, dones: tf.Tensor, gamma: float = 0.99, lambda_: float = 0.95) -> tf.Tensor:
+        """
+        Calculate advantages using Generalized Advantage Estimation (GAE).
 
-    def calculate_advantages(self, rewards: tf.Tensor, values: tf.Tensor, next_values: tf.Tensor, dones: tf.Tensor) -> tf.Tensor:
-        # Implement logic to calculate advantages
-        pass
+        Advantages are calculated as the difference between the return and the value estimates of the critic.
+        GAE helps in reducing the variance of the advantage estimates.
+
+        Args:
+            rewards (tf.Tensor): Tensor of rewards for each time step.
+            values (tf.Tensor): Tensor of value estimates for the current states.
+            next_values (tf.Tensor): Tensor of value estimates for the next states.
+            dones (tf.Tensor): Tensor indicating whether an episode has ended at each time step.
+            gamma (float): Discount factor for rewards.
+            lambda_ (float): Smoothing parameter for GAE.
+
+        Returns:
+            tf.Tensor: Tensor of calculated advantages for each time step.
+        """
+
