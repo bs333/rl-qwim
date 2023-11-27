@@ -288,5 +288,13 @@ class PPO:
 
         return action
 
+    def save_models(self, actor_path: str, critic_path: str):
+        """
+        Saves the actor and critic models to the specified paths.
+        """
+        
+        self.actor.save(actor_path)
+        self.critic.save(critic_path)
+
 
 
