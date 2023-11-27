@@ -292,9 +292,15 @@ class PPO:
         """
         Saves the actor and critic models to the specified paths.
         """
-        
+
         self.actor.save(actor_path)
         self.critic.save(critic_path)
 
+    def load_models(self, actor_path: str, critic_path: str):
+        """
+        Loads the actor and critic models from the specified paths.
+        """
+        self.actor = tf.keras.models.load_model(actor_path)
+        self.critic = tf.keras.models.load_model(critic_path)
 
 
