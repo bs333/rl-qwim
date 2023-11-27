@@ -143,6 +143,10 @@ class PortfolioOptimization:
         Returns:
             float: The current US Treasury 10-Year yield.
         """
+        treasury_yield = yf.Ticker("^TNX")  # Ticker for the 10-Year Treasury Yield
+        hist = treasury_yield.history(period="1d")
+        return hist['Close'].iloc[-1] / 100  # Convert to a percentage
+
 
 
     def calculate_reward(self, action: np.ndarray, current_prices: np.ndarray, risk_free_rate: float = 0.0) -> float:
