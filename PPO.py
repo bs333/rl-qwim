@@ -188,6 +188,19 @@ class PPO:
         # Compute advantages.
         advantages = self.calculate_advantages(rewards, values, next_values, dones)
 
+        # Update the actor and critic networks.
+        with tf.GradientTape() as tape:
+        # Calculate current policy probabilities.
+            current_probs = self.actor([states, advantages, self.actor.predict(states)])
+
+            # Calculate policy loss.
+            p_loss = policy_loss(advantages, self.actor.predict(states), actions, current_probs, self.clip_ratio)
+
+        # Compute gradients and update actor network.
+        grads = tape.gradient(p_loss, self.actor.trainable_variables)
+        self.actor_optimizer.apply_gradients(zip(grads, self.actor.trainable_variables))
+
+
         pass
 
 
