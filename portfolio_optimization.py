@@ -219,7 +219,9 @@ class PortfolioOptimization:
 
             print(f'Episode {episode + 1}, Total Reward: {total_reward}')
 
-
+    def reset_environment(self):
+        # Implement the logic to reset the environment
+        pass
 
 if __name__ == '__main__':
     # List of ETF tickers.
