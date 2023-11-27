@@ -104,16 +104,19 @@ class PPO:
         # The critic will be trained to minimize the difference between predicted values and actual returns,
         # thus learning to accurately estimate the value function.
         model = tf.keras.models.Model(inputs=state_input, outputs=values, name='critic_model')
-        
+
         return model
 
-    def policy_loss(self, advantages: tf.Tensor, old_prediction: tf.Tensor, action_probs: tf.Tensor) -> tf.Tensor:        
-        """Defines the policy loss function to be used for training the actor.
+    def policy_loss(advantages: tf.Tensor, old_probs: tf.Tensor, actions: tf.Tensor, new_probs: tf.Tensor, clip_ratio: float) -> tf.Tensor:
+        """
+        Computes the PPO policy loss.
 
         Args:
-            advantages (tf.Tensor): The advantages for each action.
-            old_prediction (tf.Tensor): The action probabilities from the old policy.
-            action_probs (tf.Tensor): The action probabilities from the current policy.
+            advantages (tf.Tensor): The advantage estimates for the actions taken.
+            old_probs (tf.Tensor): The action probabilities under the old policy.
+            actions (tf.Tensor): The actions taken.
+            new_probs (tf.Tensor): The action probabilities under the current policy.
+            clip_ratio (float): The clipping parameter epsilon, used to define the bounds of the clipping.
 
         Returns:
             tf.Tensor: The computed policy loss.
@@ -121,7 +124,8 @@ class PPO:
         pass
 
     def value_loss(self, rewards: tf.Tensor, values: tf.Tensor) -> tf.Tensor:
-        """Defines the value loss function to be used for training the critic.
+        """
+        Defines the value loss function to be used for training the critic.
 
         Args:
             rewards (tf.Tensor): The rewards obtained from the environment.
