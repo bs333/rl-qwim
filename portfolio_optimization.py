@@ -70,6 +70,22 @@ class PortfolioOptimization:
             closing_prices = self.data['Close'][ticker]
             log_returns = np.log(closing_prices / closing_prices.shift(1))
             self._adf_test(log_returns)
+    
+    def _adf_test(self, timeseries: pd.Series):
+        """
+        Private method to perform the Augmented Dickey-Fuller test.
+
+        Args:
+            timeseries (pd.Series): Time series data for a single ETF.
+        """
+        result = adfuller(timeseries.dropna())
+        print('ADF Statistic: %f' % result[0])
+        print('p-value: %f' % result[1])
+        print('Critical Values:')
+        for key, value in result[4].items():
+            print(f'   {key}: {value:.3f}')
+        print()
+
 
 
 
