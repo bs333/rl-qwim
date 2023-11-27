@@ -209,8 +209,21 @@ class PPO:
         value_grads = tape.gradient(v_loss, self.critic.trainable_variables)
         self.critic_optimizer.apply_gradients(zip(value_grads, self.critic.trainable_variables))
 
-    def calculate_discounted_rewards(self, rewards: tf.Tensor, dones: tf.Tensor) -> tf.Tensor:
-        # Implement logic to calculate discounted rewards
+    def calculate_discounted_rewards(self, rewards: tf.Tensor, dones: tf.Tensor, gamma: float = 0.99) -> tf.Tensor:
+        """
+        Calculate discounted rewards, also known as the return.
+
+        The return at each time step is the sum of future rewards discounted by the gamma factor.
+        The rewards are processed in reverse order (from end of the episode to the beginning).
+
+        Args:
+            rewards (tf.Tensor): Tensor of rewards for each time step.
+            dones (tf.Tensor): Tensor indicating whether an episode has ended at each time step.
+            gamma (float): Discount factor, typically between 0 and 1.
+
+        Returns:
+            tf.Tensor: Tensor of discounted rewards for each time step.
+        """
         pass
 
     def calculate_advantages(self, rewards: tf.Tensor, values: tf.Tensor, next_values: tf.Tensor, dones: tf.Tensor) -> tf.Tensor:
