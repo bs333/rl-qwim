@@ -301,6 +301,10 @@ class PPO:
         """
         state = tf.convert_to_tensor([state], dtype=tf.float32)
         action_probs = self.predict_action(state)  # Use the new prediction method
+
+        print("Action probabilities shape:", np.squeeze(action_probs).shape)
+        print("Number of actions:", self.action_dim)
+
         action = np.random.choice(self.action_dim, p=np.squeeze(action_probs))
 
         return action
