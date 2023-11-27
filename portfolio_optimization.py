@@ -4,6 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
 
+from . import PPO
+
 class PortfolioOptimization:
     """
     A class for portfolio optimization using financial data.
@@ -121,9 +123,5 @@ if __name__ == '__main__':
 
     # Split the data into training and testing sets.
     train_data, test_data = portfolio_opt.split_data("2020-01-01")
-
-
-
-
 
 
