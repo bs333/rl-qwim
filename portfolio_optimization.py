@@ -101,7 +101,26 @@ class PortfolioOptimization:
 
         return train_data, test_data
 
+if __name__ == '__main__':
+    # List of ETF tickers.
+    tickers = ["IWF", "EEM", "SHYG", "MTUM"]
 
+    # Create an instance of the PortfolioOptimization class.
+    portfolio_opt = PortfolioOptimization(tickers, "2001-01-01", "2022-12-31")
+
+    # Load and clean the data.
+    portfolio_opt.load_data()
+    portfolio_opt.clean_data()
+
+    # Perform exploratory data analysis.
+    portfolio_opt.plot_closing_prices()
+    portfolio_opt.show_statistics()
+
+    # Perform stationarity test on the daily log returns.
+    portfolio_opt.test_stationarity()
+
+    # Split the data into training and testing sets.
+    train_data, test_data = portfolio_opt.split_data("2020-01-01")
 
 
 
