@@ -136,6 +136,15 @@ class PortfolioOptimization:
 
         self.data['Normalized_Close'] = normalized_data
 
+    def get_current_risk_free_rate(self):
+        """
+        Fetches the current US Treasury 10-Year yield as the risk-free rate.
+
+        Returns:
+            float: The current US Treasury 10-Year yield.
+        """
+
+
     def calculate_reward(self, action: np.ndarray, current_prices: np.ndarray, risk_free_rate: float = 0.0) -> float:
         """
         Calculates the reward based on the Sortino Ratio for the given action and current market prices.
