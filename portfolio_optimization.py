@@ -147,8 +147,6 @@ class PortfolioOptimization:
         hist = treasury_yield.history(period="1d")
         return hist['Close'].iloc[-1] / 100  # Convert to a percentage
 
-
-
     def calculate_reward(self, action: np.ndarray, current_prices: np.ndarray, risk_free_rate: float = 0.0) -> float:
         """
         Calculates the reward based on the Sortino Ratio for the given action and current market prices.
@@ -177,6 +175,8 @@ class PortfolioOptimization:
             downside_deviation = 1e-6
 
         # Calculate the Sortino Ratio.
+        risk_free_rate = self.get_current_risk_free_rate()
+
         sortino_ratio = (portfolio_return - risk_free_rate) / downside_deviation
 
         return sortino_ratio
