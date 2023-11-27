@@ -1,3 +1,4 @@
+import numpy as np
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -57,6 +58,20 @@ class PortfolioOptimization:
         Displays summary statistics of the data.
         """
         print(self.data.describe())
+
+    def test_stationarity(self):
+        """
+        Performs stationarity tests on the daily log returns of each ETF.
+
+        Uses the Augmented Dickey-Fuller test to check for stationarity of log returns.
+        """
+        for ticker in self.tickers:
+            print(f'Stationarity test for daily log returns of {ticker}:')
+            closing_prices = self.data['Close'][ticker]
+            log_returns = np.log(closing_prices / closing_prices.shift(1))
+            self._adf_test(log_returns)
+
+
 
 
 
