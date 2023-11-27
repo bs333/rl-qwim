@@ -223,6 +223,11 @@ class PortfolioOptimization:
         # Implement the logic to reset the environment
         pass
 
+    def execute_action(self, action: np.ndarray):
+        # Implement the logic to execute the action and return next state, reward, and done flag
+        pass
+
+
 if __name__ == '__main__':
     # List of ETF tickers.
     tickers = ["IWF", "EEM", "SHYG", "MTUM"]
