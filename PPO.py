@@ -178,36 +178,33 @@ class PPO:
         next_states = tf.convert_to_tensor(next_states, dtype=tf.float32)
         dones = tf.convert_to_tensor(dones, dtype=tf.float32)
 
-        # Calculate discounted rewards (targets for the value function).
-        target_values = self.calculate_discounted_rewards(rewards, dones)
-
-        # Compute the value of current and next states.
+        # Calculate the value of current and next states.
         values = self.critic(states)
         next_values = self.critic(next_states)
 
-        # Compute advantages.
+        # Calculate discounted rewards and advantages.
+        target_values = self.calculate_discounted_rewards(rewards, dones)
         advantages = self.calculate_advantages(rewards, values, next_values, dones)
 
         # Update the actor and critic networks.
-        with tf.GradientTape() as tape:
-        # Calculate current policy probabilities.
-            current_probs = self.actor([states, advantages, self.actor.predict(states)])
+        with tf.GradientTape() as actor_tape, tf.GradientTape() as critic_tape:
+            # Calculate current policy probabilities.
+            current_probs = self.actor([states, advantages, self.actor(states)])
 
             # Calculate policy loss.
-            p_loss = self.policy_loss(advantages, self.actor.predict(states), actions, current_probs, self.clip_ratio)
+            p_loss = self.policy_loss(advantages, self.actor(states), actions, current_probs, self.clip_ratio)
 
-        # Compute gradients and update actor network.
-        grads = tape.gradient(p_loss, self.actor.trainable_variables)
-        self.actor_optimizer.apply_gradients(zip(grads, self.actor.trainable_variables))
-
-        with tf.GradientTape() as tape:
             # Recompute critic values and calculate value loss.
             values = self.critic(states)
             v_loss = self.value_loss(values, target_values)
 
-        # Compute gradients and update critic network
-        value_grads = tape.gradient(v_loss, self.critic.trainable_variables)
-        self.critic_optimizer.apply_gradients(zip(value_grads, self.critic.trainable_variables))
+        # Compute gradients and update actor network.
+        actor_grads = actor_tape.gradient(p_loss, self.actor.trainable_variables)
+        self.actor_optimizer.apply_gradients(zip(actor_grads, self.actor.trainable_variables))
+
+        # Compute gradients and update critic network.
+        critic_grads = critic_tape.gradient(v_loss, self.critic.trainable_variables)
+        self.critic_optimizer.apply_gradients(zip(critic_grads, self.critic.trainable_variables))
 
     def calculate_discounted_rewards(self, rewards: tf.Tensor, dones: tf.Tensor, gamma: float = 0.99) -> tf.Tensor:
         """
