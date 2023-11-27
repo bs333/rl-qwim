@@ -338,24 +338,28 @@ class PortfolioOptimization:
         print(f'Sortino Ratio: {sortino_ratio}')
 
 if __name__ == '__main__':
-    # List of ETF tickers.
-    tickers = ["IWF", "EEM", "SHYG", "MTUM"]
+    # Initialize PortfolioOptimization.
+    portfolio_opt = PortfolioOptimization(tickers=["IWF", "EEM", "SHYG", "MTUM"], 
+                                          start_date="2001-01-01", 
+                                          end_date="2022-12-31")
 
-    # Create an instance of the PortfolioOptimization class.
-    portfolio_opt = PortfolioOptimization(tickers, "2001-01-01", "2022-12-31")
-
-    # Load and clean the data.
+    # Load and preprocess data.
     portfolio_opt.load_data()
     portfolio_opt.clean_data()
-
-    # Perform exploratory data analysis.
-    portfolio_opt.plot_closing_prices()
-    portfolio_opt.show_statistics()
-
-    # Perform stationarity test on the daily log returns.
-    portfolio_opt.test_stationarity()
-
-    # Split the data into training and testing sets.
+    portfolio_opt.normalize_data()
+    
+    # Split data into training and testing.
     train_data, test_data = portfolio_opt.split_data("2020-01-01")
+
+    # Setup environment and train PPO agent.
+    portfolio_opt.setup_environment()
+    portfolio_opt.train_agent(episodes=100, 
+                              actor_lr=0.001, 
+                              critic_lr=0.001, 
+                              clip_ratio=0.2, 
+                              training_interval=10)
+
+    portfolio_opt.evaluate_agent(test_data)
+
 
 
