@@ -42,4 +42,13 @@ class PortfolioOptimization:
         """
         self.data.fillna(method='ffill', inplace=True)
 
+    def plot_closing_prices(self):
+        """Plots the closing prices of the ETFs."""
+        self.data['Close'].plot(figsize=(15, 7))
+        plt.title('Closing Prices of ETFs')
+        plt.xlabel('Date')
+        plt.ylabel('Price')
+        plt.show()
+
+
 
