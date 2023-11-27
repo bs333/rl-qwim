@@ -127,14 +127,14 @@ class PortfolioOptimization:
 
         This method scales each feature (e.g., closing prices of each ETF) based on its mean and standard deviation.
         """
-        closing_prices = self.data['Close']
+        for ticker in self.tickers:
+            closing_prices = self.data['Close'][ticker]
+            mean_val = closing_prices.mean()
+            std_val = closing_prices.std()
+            normalized_prices = (closing_prices - mean_val) / std_val
 
-        # Apply Z-score normalization
-        mean_vals = closing_prices.mean()
-        std_vals = closing_prices.std()
-        normalized_data = (closing_prices - mean_vals) / std_vals
-
-        self.data['Normalized_Close'] = normalized_data
+            # Create a new column for each ticker's normalized prices.
+            self.data[f'Normalized_Close_{ticker}'] = normalized_prices
 
     def get_current_risk_free_rate(self):
         """
@@ -338,6 +338,7 @@ class PortfolioOptimization:
         print(f'Sortino Ratio: {sortino_ratio}')
 
 if __name__ == '__main__':
+
     # Initialize PortfolioOptimization.
     portfolio_opt = PortfolioOptimization(tickers=["IWF", "EEM", "SHYG", "MTUM"], 
                                           start_date="2001-01-01", 
