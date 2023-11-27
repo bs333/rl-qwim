@@ -34,4 +34,12 @@ class PortfolioOptimization:
         """
         self.data = yf.download(self.tickers, start=self.start_date, end=self.end_date)
 
+    def clean_data(self):
+        """
+        Cleans the loaded data by filling missing values.
+        
+        Uses forward fill to handle missing values, which is common in financial time series data.
+        """
+        self.data.fillna(method='ffill', inplace=True)
+
 
