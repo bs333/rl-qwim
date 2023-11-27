@@ -34,21 +34,42 @@ class PPO:
         self.critic_optimizer = Adam(learning_rate=self.critic_lr)
 
     def build_actor(self) -> Model:
-        """Builds the actor network.
+        """
+        Builds the actor network which is responsible for the policy function.
+    
+        The actor network takes in the current state and outputs a probability distribution
+        over the possible actions. It is trained to select actions that maximize expected rewards.
 
         Returns:
-            Model: A compiled actor model.
+            Model: A compiled actor model that predicts action probabilities.
         """
 
+        # Define the input layer for the state space, which forms the basis for the actor to make decisions.
+        # This will be the input received from the environment.
         state_input = Input(shape=(self.state_dim,))
+
+        # Define a second input for advantages, which will be used to scale the gradient during training.
+        # The advantage function helps in determining the relative value of each action compared to a baseline.
         advantages = Input(shape=(1,))
+
+        # Define a third input for the old policy's prediction. This is used for the ratio in PPO's clipped objective.
+        # It ensures that the updated policy does not deviate too much from the old policy.
         old_prediction = Input(shape=(self.action_dim,))
 
+        # Add a fully connected layer with 64 units and ReLU activation. It serves as the first hidden layer that processes the input state.
         x = Dense(64, activation='relu')(state_input)
+
+        # Add another fully connected layer with 64 units and ReLU activation. This is the second hidden layer that further processes the information from the first layer.
         x = Dense(64, activation='relu')(x)
+
+        # The output layer provides a probability distribution over all possible actions using the softmax activation.
+        # This layer dictates the likelihood of taking each possible action in the given state.
         action_probs = Dense(self.action_dim, activation='softmax')(x)
 
+        # Construct the actor model with state and advantage inputs and action probabilities as outputs.
+        # This model will be trained with a custom loss function that utilizes the advantages and old predictions.
         model = tf.keras.models.Model(inputs=[state_input, advantages, old_prediction], outputs=action_probs)
+
         return model
 
     def build_critic(self) -> Model:
