@@ -209,5 +209,10 @@ class PPO:
         value_grads = tape.gradient(v_loss, self.critic.trainable_variables)
         self.critic_optimizer.apply_gradients(zip(value_grads, self.critic.trainable_variables))
 
+    def calculate_discounted_rewards(self, rewards: tf.Tensor, dones: tf.Tensor) -> tf.Tensor:
+        # Implement logic to calculate discounted rewards
+        pass
 
-
+    def calculate_advantages(self, rewards: tf.Tensor, values: tf.Tensor, next_values: tf.Tensor, dones: tf.Tensor) -> tf.Tensor:
+        # Implement logic to calculate advantages
+        pass
