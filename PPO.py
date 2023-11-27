@@ -71,6 +71,9 @@ class PPO:
         # This model will be trained with a custom loss function that utilizes the advantages and old predictions.
         model = tf.keras.models.Model(inputs=[state_input, advantages, old_prediction], outputs=action_probs)
 
+        # Display summary of model for debugging purposes.
+        model.summary()
+
         return model
 
     def build_critic(self) -> Model:
@@ -339,7 +342,7 @@ class PPO:
 
 #         if ready_to_update:
 #             ppo_agent.train(states, actions, rewards, next_states, dones)
-#             # Reset or update your storage variables
+#             # Reset or update storage variables
 
 #     if episode % save_interval == 0:
 #         ppo_agent.save_models(actor_path, critic_path)
