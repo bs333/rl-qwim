@@ -200,8 +200,14 @@ class PPO:
         grads = tape.gradient(p_loss, self.actor.trainable_variables)
         self.actor_optimizer.apply_gradients(zip(grads, self.actor.trainable_variables))
 
+        with tf.GradientTape() as tape:
+            # Recompute critic values and calculate value loss.
+            values = self.critic(states)
+            v_loss = value_loss(values, target_values)
 
-        pass
+        # Compute gradients and update critic network
+        value_grads = tape.gradient(v_loss, self.critic.trainable_variables)
+        self.critic_optimizer.apply_gradients(zip(value_grads, self.critic.trainable_variables))
 
 
 
