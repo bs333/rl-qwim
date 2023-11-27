@@ -1,3 +1,4 @@
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.optimizers import Adam
@@ -158,15 +159,16 @@ class PPO:
 
         return loss
 
-    def train(self, states: tf.Tensor, actions: tf.Tensor, rewards: tf.Tensor, next_states: tf.Tensor, dones: tf.Tensor):
-        """Implements the training loop for the PPO agent.
+    def train(self, states: np.ndarray, actions: np.ndarray, rewards: np.ndarray, next_states: np.ndarray, dones: np.ndarray):
+        """
+        Implements the training loop for the PPO agent.
 
         Args:
-            states (tf.Tensor): Batch of states.
-            actions (tf.Tensor): Batch of actions.
-            rewards (tf.Tensor): Batch of rewards.
-            next_states (tf.Tensor): Batch of next states.
-            dones (tf.Tensor): Batch of done flags indicating the end of an episode.
+            states (np.ndarray): Batch of states.
+            actions (np.ndarray): Batch of actions taken.
+            rewards (np.ndarray): Batch of rewards received.
+            next_states (np.ndarray): Batch of next states.
+            dones (np.ndarray): Batch of done flags (boolean) indicating the end of an episode.
         """
         pass
 
