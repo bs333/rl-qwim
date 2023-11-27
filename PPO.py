@@ -142,7 +142,6 @@ class PPO:
 
         return loss
 
-
     def value_loss(self, rewards: tf.Tensor, values: tf.Tensor) -> tf.Tensor:
         """
         Defines the value loss function to be used for training the critic.
