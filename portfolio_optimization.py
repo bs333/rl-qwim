@@ -295,6 +295,47 @@ class PortfolioOptimization:
             risk_free_rate (float): The risk-free rate for calculating risk-adjusted returns.
         """
 
+        current_index = 0
+        total_reward = 0
+        portfolio_values = []
+        negative_returns = []
+        risk_free_rate = self.get_current_risk_free_rate()
+
+        while current_index + self.state_window < len(test_data):
+            state_data = test_data.iloc[current_index:current_index + self.state_window]
+            state = state_data['Normalized_Close'].values.flatten()
+
+            action = ppo_agent.select_action(state)
+            next_index = current_index + 1
+            next_state, reward, done = self.execute_action(action, current_index, test_data)
+
+            total_reward += reward
+            current_index = next_index
+
+            portfolio_value = 1 + total_reward
+            portfolio_values.append(portfolio_value)
+
+            # Track negative returns for Sortino Ratio.
+            if reward < risk_free_rate:
+                negative_returns.append(reward - risk_free_rate)
+
+            if done:
+                break
+
+        final_portfolio_value = portfolio_values[-1]
+        average_return = np.mean(portfolio_values)
+        std_dev = np.std(portfolio_values)
+
+        sharpe_ratio = (average_return - risk_free_rate) / std_dev if std_dev != 0 else 0
+
+        # Calculate the Sortino Ratio.
+        downside_deviation = np.sqrt(np.mean(np.square(negative_returns))) if negative_returns else 0
+        sortino_ratio = (average_return - risk_free_rate) / downside_deviation if downside_deviation != 0 else 0
+
+        print(f'Final Portfolio Value: {final_portfolio_value}')
+        print(f'Average Return: {average_return}')
+        print(f'Sharpe Ratio: {sharpe_ratio}')
+        print(f'Sortino Ratio: {sortino_ratio}')
 
 if __name__ == '__main__':
     # List of ETF tickers.
