@@ -282,7 +282,7 @@ class PPO:
             int: The selected action.
         """
         state = tf.convert_to_tensor([state], dtype=tf.float32)
-        action_probs = self.actor.predict(state)  # Use predict instead of direct call
+        action_probs = self.predict_action(state)  # Use the new prediction method
         action = np.random.choice(self.action_dim, p=np.squeeze(action_probs))
 
         return action
