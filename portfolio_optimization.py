@@ -245,11 +245,40 @@ class PortfolioOptimization:
 
         return initial_state_flattened
 
+    def execute_action(self, action: np.ndarray, current_index: int) -> (np.ndarray, float, bool):
+        """
+        Executes the given action in the environment and returns the next state, reward, and done flag.
 
-    def execute_action(self, action: np.ndarray):
-        # Implement the logic to execute the action and return next state, reward, and done flag
-        pass
+        Args:
+            action (np.ndarray): The action to be executed, representing portfolio allocations.
+            current_index (int): The current index in the dataset.
 
+        Returns:
+            next_state (np.ndarray): The next state of the environment after taking the action.
+            reward (float): The reward received after taking the action.
+            done (bool): Whether the episode has ended.
+        """
+        # Ensure action is normalized (sums to 1)
+        normalized_action = action / np.sum(action)
+
+        # Calculate next state
+        next_index = current_index + 1
+        if next_index + self.state_window >= len(self.data):
+            done = True  # End of data
+            next_state = None  # There's no next state if data ends
+        else:
+            done = False
+            next_state_data = self.data.iloc[next_index:next_index + self.state_window]
+            next_state = next_state_data['Normalized_Close'].values.flatten()
+
+        # Calculate reward
+        # Assuming 'Close' column exists and contains closing prices
+        current_prices = self.data['Close'].iloc[current_index]
+        next_prices = self.data['Close'].iloc[next_index]
+        price_change = next_prices / current_prices
+        reward = self.calculate_reward(normalized_action, price_change)
+
+        return next_state, reward, done
 
 if __name__ == '__main__':
     # List of ETF tickers.
