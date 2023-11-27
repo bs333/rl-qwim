@@ -3,6 +3,7 @@ import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
+import random
 
 from . import PPO
 
@@ -220,8 +221,30 @@ class PortfolioOptimization:
             print(f'Episode {episode + 1}, Total Reward: {total_reward}')
 
     def reset_environment(self):
-        # Implement the logic to reset the environment
-        pass
+        """
+        Initializes the environment to an initial state at the start of an episode.
+
+        The initial state is typically a window of historical data that the agent uses to make its first decision.
+
+        Returns:
+            np.ndarray: The initial state of the environment.
+        """
+        # Choose a random starting point in the data (ensure enough data is available for the initial state).
+        max_start_index = len(self.data) - self.state_window
+        start_index = random.randint(0, max_start_index)
+
+        # Extract the state window of data starting from the chosen index.
+        initial_state_data = self.data.iloc[start_index:start_index + self.state_window]
+
+        # Prepare the state representation.
+        # Assuming 'Normalized_Close' contains the normalized closing prices
+        initial_state = initial_state_data['Normalized_Close'].values
+
+        # Flatten the state to fit into the PPO input.
+        initial_state_flattened = initial_state.flatten()
+
+        return initial_state_flattened
+
 
     def execute_action(self, action: np.ndarray):
         # Implement the logic to execute the action and return next state, reward, and done flag
