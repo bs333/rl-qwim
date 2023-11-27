@@ -125,6 +125,22 @@ class PortfolioOptimization:
         Normalizes the financial data, preparing it for use in the state representation.
         """
         # Implement data normalization logic here (e.g., Min-Max scaling, Z-score normalization)
+        pass
+
+    def calculate_reward(self, action, current_state, next_state):
+        """
+        Calculates the reward based on the chosen action and state transition.
+        
+        Args:
+            action (np.ndarray): The action taken by the agent.
+            current_state (np.ndarray): The current state of the environment.
+            next_state (np.ndarray): The next state of the environment after taking the action.
+
+        Returns:
+            float: The calculated reward.
+        """
+        # Implement reward calculation logic here
+        pass
 
 
 if __name__ == '__main__':
