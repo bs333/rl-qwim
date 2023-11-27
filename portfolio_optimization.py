@@ -178,6 +178,47 @@ class PortfolioOptimization:
             clip_ratio (float): Clipping ratio for the PPO algorithm.
             training_interval (int): Number of steps to run before updating the PPO agent.
         """
+        # Initialize the PPO agent.
+        ppo_agent = PPO(self.state_window * len(self.tickers), self.num_assets, actor_lr, critic_lr, clip_ratio)
+
+        for episode in range(episodes):
+            state = self.reset_environment()  # Reset the environment at the start of each episode.
+            total_reward = 0
+
+            states, actions, rewards, next_states, dones = [], [], [], [], []
+
+            for step in range(training_interval):
+                # Agent decides on the action based on the current state.
+                action = ppo_agent.select_action(state)
+
+                # Execute the action and get the next state and reward.
+                next_state, reward, done = self.execute_action(action)
+
+                # Store this transition.
+                states.append(state)
+                actions.append(action)
+                rewards.append(reward)
+                next_states.append(next_state)
+                dones.append(done)
+
+                total_reward += reward
+                state = next_state
+
+                if done:
+                    break
+
+            # Prepare data for PPO training.
+            states = np.array(states)
+            actions = np.array(actions)
+            rewards = np.array(rewards)
+            next_states = np.array(next_states)
+            dones = np.array(dones)
+
+            # Train the PPO agent.
+            ppo_agent.train(states, actions, rewards, next_states, dones)
+
+            print(f'Episode {episode + 1}, Total Reward: {total_reward}')
+
 
 
 if __name__ == '__main__':
