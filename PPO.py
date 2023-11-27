@@ -258,3 +258,20 @@ class PPO:
             tf.Tensor: Tensor of calculated advantages for each time step.
         """
 
+        # Calculate the temporal difference error (delta) for each time step.
+        deltas = rewards + gamma * next_values * (1 - dones) - values
+        advantages = tf.TensorArray(dtype=tf.float32, size=0, dynamic_size=True)
+        advantage_sum = 0.0  # Variable to store the accumulated advantage
+
+        # Loop through the deltas array in reverse order to calculate the advantages.
+        for t in reversed(range(len(rewards))):
+            # The advantage at each time step is a discounted sum of future TD errors.
+            advantage_sum = deltas[t] + gamma * lambda_ * advantage_sum * (1 - dones[t])
+
+            # Write the calculated advantage to the corresponding position in the tensor array.
+            advantages = advantages.write(t, advantage_sum)
+
+        # Convert the tensor array to a regular tensor before returning.
+        return advantages.stack()
+
+
