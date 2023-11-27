@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
 import random
 
-from . import PPO
+import PPO
 
 class PortfolioOptimization:
     """
@@ -353,7 +353,7 @@ if __name__ == '__main__':
 
     # Setup environment and train PPO agent.
     portfolio_opt.setup_environment()
-    portfolio_opt.train_agent(episodes=100, 
+    portfolio_opt.train_agent(episodes=10, 
                               actor_lr=0.001, 
                               critic_lr=0.001, 
                               clip_ratio=0.2, 
