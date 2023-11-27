@@ -194,7 +194,7 @@ class PPO:
             current_probs = self.actor([states, advantages, self.actor.predict(states)])
 
             # Calculate policy loss.
-            p_loss = policy_loss(advantages, self.actor.predict(states), actions, current_probs, self.clip_ratio)
+            p_loss = self.policy_loss(advantages, self.actor.predict(states), actions, current_probs, self.clip_ratio)
 
         # Compute gradients and update actor network.
         grads = tape.gradient(p_loss, self.actor.trainable_variables)
@@ -203,7 +203,7 @@ class PPO:
         with tf.GradientTape() as tape:
             # Recompute critic values and calculate value loss.
             values = self.critic(states)
-            v_loss = value_loss(values, target_values)
+            v_loss = self.value_loss(values, target_values)
 
         # Compute gradients and update critic network
         value_grads = tape.gradient(v_loss, self.critic.trainable_variables)
