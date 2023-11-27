@@ -245,8 +245,9 @@ class PortfolioOptimization:
         max_start_index = len(self.data) - self.state_window
         start_index = random.randint(0, max_start_index)
 
+        # Extract the window of data for each normalized column and concatenate them.
         initial_state_data = self.data.iloc[start_index:start_index + self.state_window]
-        initial_state = initial_state_data['Normalized_Close'].values.flatten()
+        initial_state = np.concatenate([initial_state_data[f'Normalized_Close_{ticker}'].values for ticker in self.tickers], axis=0)
 
         return initial_state, start_index
 
