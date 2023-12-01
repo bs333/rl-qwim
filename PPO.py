@@ -307,16 +307,21 @@ class PPO:
             int: The selected action.
         """
             
-        # Predict action probabilities using the updated prediction method
+        # Predict action probabilities using the updated prediction method.
         action_probs = self.predict_action(state)
 
-        # Debugging: Print shapes to understand the mismatch
+        # Debugging: Print shapes to understand the mismatch.
         print("Action probabilities shape:", action_probs.shape)
         print("Number of actions:", self.action_dim)
 
-        # Check if action probabilities are correctly sized
+        # Check if action probabilities are correctly sized.
         if action_probs.shape[1] != self.action_dim:
             raise ValueError(f"Expected action probabilities of size {self.action_dim}, got {action_probs.shape[1]}")
+
+        # Check if action probabilities contain NaN.
+        if np.isnan(action_probs).any():
+            raise ValueError("NaN values found in action probabilities")
+
 
         # Squeeze the batch dimension and select an action
         action = np.random.choice(self.action_dim, p=np.squeeze(action_probs))
