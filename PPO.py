@@ -302,15 +302,22 @@ class PPO:
         Returns:
             int: The selected action.
         """
+        
         state = tf.convert_to_tensor([state], dtype=tf.float32)
         action_probs = self.predict_action(state)  # Use the new prediction method
 
-        print("Action probabilities shape:", np.squeeze(action_probs).shape)
+        # Debugging: Print shapes to understand the mismatch
+        print("Action probabilities shape:", action_probs.shape)
         print("Number of actions:", self.action_dim)
+
+        # Ensure that the action probabilities are correctly sized
+        if action_probs.shape[1] != self.action_dim:
+            raise ValueError(f"Expected action probabilities of size {self.action_dim}, got {action_probs.shape[1]}")
 
         action = np.random.choice(self.action_dim, p=np.squeeze(action_probs))
 
         return action
+
 
     def save_models(self, actor_path: str, critic_path: str):
         """
