@@ -284,13 +284,17 @@ class PPO:
         Returns:
             tf.Tensor: Action probabilities.
         """
-        # Extract the necessary layers from the actor model.
-        # Assuming self.actor is the existing actor model.
-        x = self.actor.layers[1](state)  # First hidden layer (after input layer)
-        x = self.actor.layers[2](x)      # Second hidden layer
-        action_probs = self.actor.layers[3](x)  # Output layer
+        # Convert the state to a tensor and add a batch dimension
+        state = tf.convert_to_tensor([state], dtype=tf.float32)
 
-        return action_probs
+        # Create dummy inputs for the other two inputs of the actor model
+        dummy_advantages = tf.zeros((1, 1))
+        dummy_old_prediction = tf.zeros((1, self.action_dim))
+
+        # Use the actor model to predict action probabilities
+        action_probs = self.actor([state, dummy_advantages, dummy_old_prediction])
+
+        return action_probs.numpy()
 
     def select_action(self, state: np.ndarray) -> int:
         """
