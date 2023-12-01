@@ -322,7 +322,6 @@ class PPO:
         if np.isnan(action_probs).any():
             raise ValueError("NaN values found in action probabilities")
 
-
         # Squeeze the batch dimension and select an action
         action = np.random.choice(self.action_dim, p=np.squeeze(action_probs))
 
