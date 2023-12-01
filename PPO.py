@@ -315,8 +315,8 @@ class PPO:
         print("Number of actions:", self.action_dim)
 
         # Check if action probabilities are correctly sized
-        if action_probs.shape[0] != self.action_dim:
-            raise ValueError(f"Expected action probabilities of size {self.action_dim}, got {action_probs.shape[0]}")
+        if action_probs.shape[1] != self.action_dim:
+            raise ValueError(f"Expected action probabilities of size {self.action_dim}, got {action_probs.shape[1]}")
 
         # Squeeze the batch dimension and select an action
         action = np.random.choice(self.action_dim, p=np.squeeze(action_probs))
