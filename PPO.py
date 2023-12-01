@@ -284,14 +284,14 @@ class PPO:
         Returns:
             tf.Tensor: Action probabilities.
         """
-        # Convert the state to a tensor and add a batch dimension
+        # Convert the state to a tensor and add a batch dimension.
         state = tf.convert_to_tensor([state], dtype=tf.float32)
 
-        # Create dummy inputs for the other two inputs of the actor model
+        # Create dummy inputs for the other two inputs of the actor model.
         dummy_advantages = tf.zeros((1, 1))
         dummy_old_prediction = tf.zeros((1, self.action_dim))
 
-        # Use the actor model to predict action probabilities
+        # Use the actor model to predict action probabilities.
         action_probs = self.actor([state, dummy_advantages, dummy_old_prediction])
 
         return action_probs.numpy()
@@ -306,22 +306,22 @@ class PPO:
         Returns:
             int: The selected action.
         """
-        
-        state = tf.convert_to_tensor([state], dtype=tf.float32)
-        action_probs = self.predict_action(state)  # Use the new prediction method
+            
+        # Predict action probabilities using the updated prediction method
+        action_probs = self.predict_action(state)
 
         # Debugging: Print shapes to understand the mismatch
         print("Action probabilities shape:", action_probs.shape)
         print("Number of actions:", self.action_dim)
 
-        # Ensure that the action probabilities are correctly sized
-        if action_probs.shape[1] != self.action_dim:
-            raise ValueError(f"Expected action probabilities of size {self.action_dim}, got {action_probs.shape[1]}")
+        # Check if action probabilities are correctly sized
+        if action_probs.shape[0] != self.action_dim:
+            raise ValueError(f"Expected action probabilities of size {self.action_dim}, got {action_probs.shape[0]}")
 
+        # Squeeze the batch dimension and select an action
         action = np.random.choice(self.action_dim, p=np.squeeze(action_probs))
 
         return action
-
 
     def save_models(self, actor_path: str, critic_path: str):
         """
