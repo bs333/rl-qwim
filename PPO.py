@@ -1,8 +1,10 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Dense
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.models import Model
+
+from tensorflow import keras
+from keras.models import Model
+from keras.layers import Input, Dense
+from keras.optimizers import Adam
 
 class PPO:
     """Proximal Policy Optimization (PPO) agent with separate actor and critic networks.
@@ -341,25 +343,3 @@ class PPO:
         """
         self.actor = tf.keras.models.load_model(actor_path)
         self.critic = tf.keras.models.load_model(critic_path)
-
-# # Example usage outside the class:
-# ppo_agent = PPO(state_dim, action_dim, actor_lr, critic_lr, clip_ratio)
-
-# # Example training loop:
-# for episode in range(total_episodes):
-#     state = env.reset()
-#     done = False
-#     while not done:
-#         action = ppo_agent.select_action(state)
-#         next_state, reward, done, _ = env.step(action)
-#         # Store state, action, reward, next_state, done
-#         state = next_state
-
-#         if ready_to_update:
-#             ppo_agent.train(states, actions, rewards, next_states, dones)
-#             # Reset or update storage variables
-
-#     if episode % save_interval == 0:
-#         ppo_agent.save_models(actor_path, critic_path)
-
-#     # Additional logging or monitoring as needed
