@@ -222,7 +222,7 @@ class PPO:
             values = self.critic(states)
             v_loss = self.value_loss(values, target_values)
 
-            # Debugging: Check for NaNs in loss values
+            # Debugging: Check for NaNs in loss values.
             if tf.math.is_nan(p_loss):
                 print("NaN detected in policy loss")
             if tf.math.is_nan(v_loss):
@@ -231,10 +231,14 @@ class PPO:
 
         # Compute gradients and update actor network.
         actor_grads = actor_tape.gradient(p_loss, self.actor.trainable_variables)
+        if any(tf.reduce_any(tf.math.is_nan(grad)) for grad in actor_grads):
+            print("NaN detected in actor gradients")
         self.actor_optimizer.apply_gradients(zip(actor_grads, self.actor.trainable_variables))
 
         # Compute gradients and update critic network.
         critic_grads = critic_tape.gradient(v_loss, self.critic.trainable_variables)
+        if any(tf.reduce_any(tf.math.is_nan(grad)) for grad in critic_grads):
+            print("NaN detected in critic gradients")
         self.critic_optimizer.apply_gradients(zip(critic_grads, self.critic.trainable_variables))
 
     def calculate_discounted_rewards(self, rewards: tf.Tensor, dones: tf.Tensor, gamma: float = 0.99) -> tf.Tensor:
