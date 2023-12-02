@@ -222,6 +222,13 @@ class PPO:
             values = self.critic(states)
             v_loss = self.value_loss(values, target_values)
 
+            # Debugging: Check for NaNs in loss values
+            if tf.math.is_nan(p_loss):
+                print("NaN detected in policy loss")
+            if tf.math.is_nan(v_loss):
+                print("NaN detected in value loss")
+
+
         # Compute gradients and update actor network.
         actor_grads = actor_tape.gradient(p_loss, self.actor.trainable_variables)
         self.actor_optimizer.apply_gradients(zip(actor_grads, self.actor.trainable_variables))
