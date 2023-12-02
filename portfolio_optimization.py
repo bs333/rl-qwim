@@ -46,9 +46,8 @@ class PortfolioOptimization:
         Uses forward fill to handle missing values, which is common in financial time series data.
         """
         self.data.fillna(method='ffill', inplace=True)
-        if data_filled.isnull().any().any():
+        if self.data.isnull().any().any():
             print("NaNs found after filling missing values")
-
 
     def plot_closing_prices(self):
         """
@@ -198,6 +197,8 @@ class PortfolioOptimization:
         # Assuming current_prices are relative changes (e.g., today's price / yesterday's price)
         portfolio_return = np.sum(normalized_action * current_prices) - 1
 
+        risk_free_rate = self.get_current_risk_free_rate(date)
+
         # Calculate the downside deviation (only consider negative returns).
         negative_returns = [min(0, r - risk_free_rate) for r in current_prices]
         downside_deviation = np.sqrt(np.mean(np.square(negative_returns)))
@@ -207,7 +208,6 @@ class PortfolioOptimization:
             downside_deviation = 1e-6
 
         # Calculate the Sortino Ratio.
-        risk_free_rate = self.get_current_risk_free_rate(date)
         sortino_ratio = (portfolio_return - risk_free_rate) / downside_deviation
 
         return sortino_ratio
