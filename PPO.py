@@ -33,8 +33,8 @@ class PPO:
         self.critic = self.build_critic()
         
         # Define optimizers for both networks.
-        self.actor_optimizer = Adam(learning_rate=self.actor_lr)
-        self.critic_optimizer = Adam(learning_rate=self.critic_lr)
+        self.actor_optimizer = Adam(learning_rate=self.actor_lr, clipnorm=1.0)
+        self.critic_optimizer = Adam(learning_rate=self.critic_lr, clipnorm=1.0)
 
     def build_actor(self) -> Model:
         """
