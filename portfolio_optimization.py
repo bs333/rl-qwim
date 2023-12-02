@@ -46,6 +46,9 @@ class PortfolioOptimization:
         Uses forward fill to handle missing values, which is common in financial time series data.
         """
         self.data.fillna(method='ffill', inplace=True)
+        # Fill NaNs with the mean of each column.
+        self.data.fillna(self.data.mean())
+
         if self.data.isnull().any().any():
             print("NaNs found after filling missing values")
 
@@ -382,7 +385,7 @@ class PortfolioOptimization:
 if __name__ == '__main__':
 
     # Initialize PortfolioOptimization.
-    portfolio_opt = PortfolioOptimization(tickers=["IWF", "EEM", "SHYG", "MTUM"], 
+    portfolio_opt = PortfolioOptimization(tickers=["IWD", "IWF", "IWO", "EWJ"], 
                                           start_date="2001-01-01", 
                                           end_date="2022-12-31")
 
