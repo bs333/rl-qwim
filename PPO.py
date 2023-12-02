@@ -200,6 +200,12 @@ class PPO:
         values = self.critic(states)
         next_values = self.critic(next_states)
 
+        # Debugging: Check for NaNs in network outputs.
+        if tf.reduce_any(tf.math.is_nan(values)):
+            print("NaN detected in critic values")
+        if tf.reduce_any(tf.math.is_nan(next_values)):
+            print("NaN detected in next critic values")
+
         # Calculate discounted rewards and advantages.
         target_values = self.calculate_discounted_rewards(rewards, dones)
         advantages = self.calculate_advantages(rewards, values, next_values, dones)
