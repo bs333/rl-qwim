@@ -143,6 +143,14 @@ class PPO:
         # Evaluate the unclipped function.
         unclipped_surrogate = ratio * advantages
 
+        # Debugging: Check for NaNs in inputs to the loss function
+        if any(tf.reduce_any(tf.math.is_nan(tensor)) for tensor in [advantages, old_probs, actions, new_probs]):
+            print("NaN detected in loss function inputs")
+            # Print individual tensors to identify which one has NaNs
+            for tensor in [advantages, old_probs, actions, new_probs]:
+                if tf.reduce_any(tf.math.is_nan(tensor)):
+                    print(f"NaNs in {tensor.name}: {tensor}")
+
         # Take the minimum of the clipped and unclipped surrogate functions to form the final objective function.
         loss = -tf.reduce_mean(tf.minimum(unclipped_surrogate, clipped_surrogate))
 
