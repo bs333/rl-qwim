@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
 import random
+from datetime import datetime, timedelta
 
 from PPO import PPO
 
@@ -138,7 +139,7 @@ class PortfolioOptimization:
 
     def get_current_risk_free_rate(self, date: str):
         """
-        Fetches the 10-Year US Treasury Yield (10Y UST) for the given date as the risk-free rate.
+        Fetches the nearest available 10-Year US Treasury Yield (10Y UST) for the given date as the risk-free rate.
 
         Args:
             date (str): The date for which to retrieve the 10Y UST, in 'YYYY-MM-DD' format.
@@ -146,9 +147,31 @@ class PortfolioOptimization:
         Returns:
             float: The 10-Year US Treasury Yield for the given date, converted to a percentage.
         """
-        treasury_yield = yf.Ticker("^TNX")  # Ticker for the 10-Year Treasury Yield
-        hist = treasury_yield.history(period="1d")
-        return hist['Close'].iloc[-1] / 100  # Convert to a percentage
+        # Ticker symbol for the 10-Year Treasury Yield.
+        treasury_yield_ticker = yf.Ticker("^TNX")
+
+        # Convert the string date to a datetime object
+        target_date = datetime.strptime(date, '%Y-%m-%d')
+        delta = timedelta(days=1)
+
+        for _ in range(7):  # Check for a week in both directions.
+            try:
+                # Try fetching data for the target date.
+                hist = treasury_yield_ticker.history(start=target_date, end=target_date)
+
+                if not hist.empty:
+                    return hist['Close'].iloc[-1] / 100  # Return the yield if available.
+
+                # If no data, check one day earlier and one day later.
+                target_date -= delta  # Check one day earlier.
+
+            except Exception as e:
+                # Handle exceptions (e.g., connection issues, API limitations)..
+                print(f"Error fetching data for date {target_date}: {e}")
+                break  # Exit the loop if there's an error.
+
+        # If no data is found after checking, assume 0.00 to be the risk-free-rate.
+        return 0.00
 
     def calculate_reward(self, action: np.ndarray, current_prices: np.ndarray, risk_free_rate: float = 0.0) -> float:
         """
