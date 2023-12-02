@@ -136,12 +136,15 @@ class PortfolioOptimization:
             # Create a new column for each ticker's normalized prices.
             self.data[f'Normalized_Close_{ticker}'] = normalized_prices
 
-    def get_current_risk_free_rate(self):
+    def get_current_risk_free_rate(self, date: str):
         """
-        Fetches the current US Treasury 10-Year yield as the risk-free rate.
+        Fetches the 10-Year US Treasury Yield (10Y UST) for the given date as the risk-free rate.
+
+        Args:
+            date (str): The date for which to retrieve the 10Y UST, in 'YYYY-MM-DD' format.
 
         Returns:
-            float: The current US Treasury 10-Year yield.
+            float: The 10-Year US Treasury Yield for the given date, converted to a percentage.
         """
         treasury_yield = yf.Ticker("^TNX")  # Ticker for the 10-Year Treasury Yield
         hist = treasury_yield.history(period="1d")
