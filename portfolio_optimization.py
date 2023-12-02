@@ -155,28 +155,28 @@ class PortfolioOptimization:
         Returns:
             float: The 10-Year US Treasury Yield for the given date, converted to a percentage.
         """
-        # Ticker symbol for the 10-Year Treasury Yield.
-        treasury_yield_ticker = yf.Ticker("^TNX")
+        # # Ticker symbol for the 10-Year Treasury Yield.
+        # treasury_yield_ticker = yf.Ticker("^TNX")
 
-        # Convert the string date to a datetime object
-        target_date = datetime.strptime(date, '%Y-%m-%d')
-        delta = timedelta(days=1)
+        # # Convert the string date to a datetime object
+        # target_date = datetime.strptime(date, '%Y-%m-%d')
+        # delta = timedelta(days=1)
 
-        for _ in range(7):  # Check for a week in both directions.
-            try:
-                # Try fetching data for the target date.
-                hist = treasury_yield_ticker.history(start=target_date, end=target_date)
+        # for _ in range(7):  # Check for a week in both directions.
+        #     try:
+        #         # Try fetching data for the target date.
+        #         hist = treasury_yield_ticker.history(start=target_date, end=target_date)
 
-                if not hist.empty:
-                    return hist['Close'].iloc[-1] / 100  # Return the yield if available.
+        #         if not hist.empty:
+        #             return hist['Close'].iloc[-1] / 100  # Return the yield if available.
 
-                # If no data, check one day earlier and one day later.
-                target_date -= delta  # Check one day earlier.
+        #         # If no data, check one day earlier and one day later.
+        #         target_date -= delta  # Check one day earlier.
 
-            except Exception as e:
-                # Handle exceptions (e.g., connection issues, API limitations)..
-                print(f"Error fetching data for date {target_date}: {e}")
-                break  # Exit the loop if there's an error.
+        #     except Exception as e:
+        #         # Handle exceptions (e.g., connection issues, API limitations)..
+        #         print(f"Error fetching data for date {target_date}: {e}")
+        #         break  # Exit the loop if there's an error.
 
         # If no data is found after checking, assume 0.00 to be the risk-free-rate.
         return 0.00
