@@ -184,6 +184,11 @@ class PPO:
             dones (np.ndarray): Batch of done flags (boolean) indicating the end of an episode.
         """
 
+        # Check for NaNs in inputs.
+        for name, data in zip(["states", "actions", "rewards", "next_states", "dones"], [states, actions, rewards, next_states, dones]):
+            if np.isnan(data).any():
+                print(f"NaNs detected in input {name}")
+
         # Convert numpy arrays to TensorFlow tensors.
         states = tf.convert_to_tensor(states, dtype=tf.float32)
         actions = tf.convert_to_tensor(actions, dtype=tf.int32)
