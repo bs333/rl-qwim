@@ -46,6 +46,9 @@ class PortfolioOptimization:
         Uses forward fill to handle missing values, which is common in financial time series data.
         """
         self.data.fillna(method='ffill', inplace=True)
+        if data_filled.isnull().any().any():
+            print("NaNs found after filling missing values")
+
 
     def plot_closing_prices(self):
         """
@@ -133,6 +136,9 @@ class PortfolioOptimization:
             mean_val = closing_prices.mean()
             std_val = closing_prices.std()
             normalized_prices = (closing_prices - mean_val) / std_val
+
+            if normalized_prices.isnull().any().any():
+                print("NaNs found after normalization")
 
             # Create a new column for each ticker's normalized prices.
             self.data[f'Normalized_Close_{ticker}'] = normalized_prices
