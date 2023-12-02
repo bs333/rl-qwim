@@ -327,9 +327,14 @@ class PortfolioOptimization:
         total_reward = 0
         portfolio_values = []
         negative_returns = []
-        risk_free_rate = self.get_current_risk_free_rate()
 
         while current_index + self.state_window < len(test_data):
+            # Extract the date for the current step.
+            current_step_date = test_data.iloc[current_index].name.strftime('%Y-%m-%d')
+
+            # Retrieve the risk-free rate for the current date.
+            risk_free_rate = self.get_current_risk_free_rate(current_step_date)
+
             state_data = test_data.iloc[current_index:current_index + self.state_window]
             state = state_data['Normalized_Close'].values.flatten()
 
