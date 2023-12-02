@@ -173,7 +173,7 @@ class PortfolioOptimization:
         # If no data is found after checking, assume 0.00 to be the risk-free-rate.
         return 0.00
 
-    def calculate_reward(self, action: np.ndarray, current_prices: np.ndarray, risk_free_rate: float = 0.0) -> float:
+    def calculate_reward(self, action: np.ndarray, current_prices: np.ndarray, date: str) -> float:
         """
         Calculates the reward based on the Sortino Ratio for the given action and current market prices.
 
@@ -201,7 +201,7 @@ class PortfolioOptimization:
             downside_deviation = 1e-6
 
         # Calculate the Sortino Ratio.
-        risk_free_rate = self.get_current_risk_free_rate()
+        risk_free_rate = self.get_current_risk_free_rate(date)
         sortino_ratio = (portfolio_return - risk_free_rate) / downside_deviation
 
         return sortino_ratio
@@ -304,12 +304,15 @@ class PortfolioOptimization:
             next_state_parts = [next_state_data[f'Normalized_Close_{ticker}'].values for ticker in self.tickers]
             next_state = np.concatenate(next_state_parts, axis=0)
 
+        # Retrieve the date for the current index
+        current_date = self.data.index[current_index].strftime('%Y-%m-%d')
+
         # Calculate reward
         # Assuming 'Close' column exists and contains closing prices
         current_prices = self.data['Close'].iloc[current_index]
         next_prices = self.data['Close'].iloc[next_index]
         price_change = next_prices / current_prices
-        reward = self.calculate_reward(normalized_action, price_change)
+        reward = self.calculate_reward(normalized_action, price_change, current_date)
 
         return next_state, reward, done
 
