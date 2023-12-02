@@ -205,7 +205,7 @@ class PortfolioOptimization:
                 action = ppo_agent.select_action(state)
 
                 # Execute the action and get the next state and reward.
-                next_state, reward, done, next_index = self.execute_action(action)
+                next_state, reward, done, next_index = self.execute_action(action, current_index)
                 current_index = next_index  # Update the index for the next iteration
 
                 # Store this transition.
