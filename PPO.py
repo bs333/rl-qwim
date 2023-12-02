@@ -323,13 +323,13 @@ class PPO:
         dummy_advantages = tf.zeros((1, 1))
         dummy_old_prediction = tf.zeros((1, self.action_dim))
 
+        # Use the actor model to predict action probabilities.
+        action_probs = self.actor([state, dummy_advantages, dummy_old_prediction])
+
         # Debugging: Check if the action probabilities contain NaN values.
         if tf.reduce_any(tf.math.is_nan(action_probs)):
             print("NaN detected in action_probs")
             print("State:", state)
-
-        # Use the actor model to predict action probabilities.
-        action_probs = self.actor([state, dummy_advantages, dummy_old_prediction])
 
         return action_probs.numpy()
 
