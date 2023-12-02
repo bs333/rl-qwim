@@ -193,8 +193,12 @@ class PortfolioOptimization:
         Returns:
             float: The calculated reward based on the Sortino Ratio.
         """
-        # Ensure the action sums up to 1 (100% of the portfolio).
-        normalized_action = action / np.sum(action)
+
+        if np.sum(action) == 0:
+            print("Sum of actions is zero. Cannot normalize.")
+        else:
+            # Ensure the action sums up to 1 (100% of the portfolio).
+            normalized_action = action / np.sum(action)
 
         # Calculate portfolio return.
         # Assuming current_prices are relative changes (e.g., today's price / yesterday's price)
