@@ -275,7 +275,8 @@ class PortfolioOptimization:
         else:
             done = False
             next_state_data = self.data.iloc[next_index:next_index + self.state_window]
-            next_state = next_state_data['Normalized_Close'].values.flatten()
+            next_state_parts = [next_state_data[f'Normalized_Close_{ticker}'].values for ticker in self.tickers]
+            next_state = np.concatenate(next_state_parts, axis=0)
 
         # Calculate reward
         # Assuming 'Close' column exists and contains closing prices
