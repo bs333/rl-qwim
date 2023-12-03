@@ -183,7 +183,7 @@ class PortfolioOptimization:
 
     def calculate_reward(self, action: np.ndarray, current_prices: np.ndarray, date: str) -> float:
         """
-        Calculates the reward based on the Sortino Ratio for the given action and current market prices.
+        Calculates the reward based on the Sharpe Ratio for the given action and current market prices.
 
         Args:
             action (np.ndarray): The action taken by the agent, representing the portfolio allocation.
@@ -191,32 +191,29 @@ class PortfolioOptimization:
             risk_free_rate (float): The risk-free rate for the period, default is 0.0.
 
         Returns:
-            float: The calculated reward based on the Sortino Ratio.
+            float: The calculated reward based on the Sharpe Ratio.
         """
-        # if np.sum(action) == 0:
-        #     print("Sum of actions is zero. Cannot normalize.")
-        # else:
-        #     # Ensure the action sums up to 1 (100% of the portfolio).
-        #     normalized_action = action / np.sum(action)
-
         # Calculate portfolio return.
         # Assuming current_prices are relative changes (e.g., today's price / yesterday's price)
         portfolio_return = np.sum(action * current_prices) - 1
 
         risk_free_rate = self.get_current_risk_free_rate(date)
 
-        # Calculate the downside deviation (only consider negative returns).
-        negative_returns = [min(0, r - risk_free_rate) for r in current_prices]
-        downside_deviation = np.sqrt(np.mean(np.square(negative_returns)))
+        # Calculate the excess returns.
+        excess_returns = portfolio_return - risk_free_rate
 
-        # Avoid division by zero in case of no downside risk.
-        if downside_deviation == 0:
-            downside_deviation = 1e-6
+        # Standard deviation of excess returns (portfolio risk).
+        # This is a simplified assumption since it uses only the current excess return.
+        portfolio_risk = np.std(excess_returns)
 
-        # Calculate the Sortino Ratio.
-        sortino_ratio = (portfolio_return - risk_free_rate) / downside_deviation
+        # Avoid division by zero by setting a very small number if portfolio_risk is zero.
+        if portfolio_risk == 0:
+            portfolio_risk = 1e-6
 
-        return sortino_ratio
+        # Calculate the Sharpe Ratio.
+        sharpe_ratio = excess_returns / portfolio_risk
+
+        return sharpe_ratio
 
     def train_agent(self, ppo_agent, episodes: int, training_interval: int):
         """
@@ -341,11 +338,12 @@ class PortfolioOptimization:
         current_index = 0
         total_reward = 0
         portfolio_values = []
-        negative_returns = []
+        dates = []
 
         while current_index + self.state_window < len(test_data):
             # Extract the date for the current step.
             current_step_date = test_data.iloc[current_index].name.strftime('%Y-%m-%d')
+            dates.append(test_data.iloc[current_index].name)
 
             # Retrieve the risk-free rate for the current date.
             risk_free_rate = self.get_current_risk_free_rate(current_step_date)
@@ -364,12 +362,22 @@ class PortfolioOptimization:
             portfolio_value = 1 + total_reward
             portfolio_values.append(portfolio_value)
 
-            # Track negative returns for Sortino Ratio.
-            if reward < risk_free_rate:
-                negative_returns.append(reward - risk_free_rate)
+            # # Track negative returns for Sortino Ratio.
+            # if reward < risk_free_rate:
+            #     negative_returns.append(reward - risk_free_rate)
 
-            if done:
-                break
+            # if done:
+            #     break
+
+        # # Plotting the results
+        # plt.figure(figsize=(12, 6))
+        # plt.plot(dates, portfolio_values, label='Portfolio Value')
+        # plt.xlabel('Date')
+        # plt.ylabel('Portfolio Value')
+        # plt.title('Portfolio Value Over Time')
+        # plt.legend()
+        # plt.grid(True)
+        # plt.show()
 
         final_portfolio_value = portfolio_values[-1]
         average_return = np.mean(portfolio_values)
