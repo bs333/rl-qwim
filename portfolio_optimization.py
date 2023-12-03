@@ -306,7 +306,7 @@ class PortfolioOptimization:
         if np.sum(action) == 0:
             print("Sum of actions is zero. Assigning default action.")
             # Establish a default non-zero action, for example, equal allocation to all assets.
-            normalized_action = np.ones_like(action) / action.size
+            normalized_action = np.ones_like(action) / action
         else:
             # Normalize the action if the sum is not zero.
             normalized_action = action / np.sum(action)
@@ -406,15 +406,24 @@ if __name__ == '__main__':
     # Split data into training and testing.
     train_data, test_data = portfolio_opt.split_data("2020-01-01")
 
-    # Setup environment and train PPO agent.
+    # Setup environment.
     portfolio_opt.setup_environment()
-    portfolio_opt.train_agent(episodes=10, 
-                              actor_lr=0.001, 
-                              critic_lr=0.001, 
-                              clip_ratio=0.2, 
+
+    # Initialize the PPO agent.
+    ppo_agent = PPO(portfolio_opt.state_window * len(portfolio_opt.tickers), 
+                    portfolio_opt.num_assets, 
+                    actor_lr=0.001, 
+                    critic_lr=0.001, 
+                    clip_ratio=0.2)
+
+    # Train the PPO agent.
+    portfolio_opt.train_agent(ppo_agent, 
+                              episodes=10, 
                               training_interval=10)
 
-    portfolio_opt.evaluate_agent(test_data)
+    # Evaluate the trained agent.
+    portfolio_opt.evaluate_agent(test_data, ppo_agent)
+
 
 
 
