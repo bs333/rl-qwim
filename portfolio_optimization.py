@@ -193,16 +193,15 @@ class PortfolioOptimization:
         Returns:
             float: The calculated reward based on the Sortino Ratio.
         """
-
-        if np.sum(action) == 0:
-            print("Sum of actions is zero. Cannot normalize.")
-        else:
-            # Ensure the action sums up to 1 (100% of the portfolio).
-            normalized_action = action / np.sum(action)
+        # if np.sum(action) == 0:
+        #     print("Sum of actions is zero. Cannot normalize.")
+        # else:
+        #     # Ensure the action sums up to 1 (100% of the portfolio).
+        #     normalized_action = action / np.sum(action)
 
         # Calculate portfolio return.
         # Assuming current_prices are relative changes (e.g., today's price / yesterday's price)
-        portfolio_return = np.sum(normalized_action * current_prices) - 1
+        portfolio_return = np.sum(action * current_prices) - 1
 
         risk_free_rate = self.get_current_risk_free_rate(date)
 
@@ -298,13 +297,13 @@ class PortfolioOptimization:
             reward (float): The reward received after taking the action.
             done (bool): Whether the episode has ended.
         """
-        if np.sum(action) == 0:
-            print("Sum of actions is zero. Assigning default action.")
-            # Establish a default non-zero action, for example, equal allocation to all assets.
-            normalized_action = np.ones_like(action) / action
-        else:
-            # Normalize the action if the sum is not zero.
-            normalized_action = action / np.sum(action)
+        # if np.sum(action) == 0:
+        #     print("Sum of actions is zero. Assigning default action.")
+        #     # Establish a default non-zero action, for example, equal allocation to all assets.
+        #     normalized_action = np.ones_like(action) / action.size
+        # else:
+        #     # Normalize the action if the sum is not zero.
+        #     normalized_action = action / np.sum(action)
 
         # Calculate next state
         next_index = current_index + 1
@@ -325,7 +324,7 @@ class PortfolioOptimization:
         current_prices = self.data['Close'].iloc[current_index]
         next_prices = self.data['Close'].iloc[next_index]
         price_change = next_prices / current_prices
-        reward = self.calculate_reward(normalized_action, price_change, current_date)
+        reward = self.calculate_reward(action, price_change, current_date)
 
         return next_state, reward, done
 

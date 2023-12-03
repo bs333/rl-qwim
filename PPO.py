@@ -73,8 +73,8 @@ class PPO:
         # This model will be trained with a custom loss function that utilizes the advantages and old predictions.
         model = tf.keras.models.Model(inputs=[state_input, advantages, old_prediction], outputs=action_probs)
 
-        # Display summary of model for debugging purposes.
-        model.summary()
+        # # Display summary of model for debugging purposes.
+        # model.summary()
 
         return model
 
@@ -340,8 +340,8 @@ class PPO:
         action_probs = self.predict_action(state)
 
         # Debugging: Print shapes to understand the mismatch.
-        print("Action probabilities shape:", action_probs.shape)
-        print("Number of actions:", self.action_dim)
+        # print("Action probabilities shape:", action_probs.shape)
+        # print("Number of actions:", self.action_dim)
 
         # Check if action probabilities are correctly sized.
         if action_probs.shape[1] != self.action_dim:
