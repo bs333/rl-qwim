@@ -357,7 +357,7 @@ class PortfolioOptimization:
 
             action = ppo_agent.select_action(state)
             next_index = current_index + 1
-            next_state, reward, done = self.execute_action(action, current_index, test_data)
+            next_state, reward, done = self.execute_action(action, current_index)
 
             total_reward += reward
             current_index = next_index
