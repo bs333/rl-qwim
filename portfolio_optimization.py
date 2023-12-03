@@ -377,14 +377,17 @@ class PortfolioOptimization:
 
         sharpe_ratio = (average_return - risk_free_rate) / std_dev if std_dev != 0 else 0
 
-        # Calculate the Sortino Ratio.
-        downside_deviation = np.sqrt(np.mean(np.square(negative_returns))) if negative_returns else 0
-        sortino_ratio = (average_return - risk_free_rate) / downside_deviation if downside_deviation != 0 else 0
+        # # Calculate the Sortino Ratio.
+        # if negative_returns:
+        #     downside_deviation = np.std(negative_returns)
+        #     sortino_ratio = (average_return - risk_free_rate) / downside_deviation if downside_deviation != 0 else 0
+        # else:
+        #     sortino_ratio = 0
 
         print(f'Final Portfolio Value: {final_portfolio_value}')
         print(f'Average Return: {average_return}')
         print(f'Sharpe Ratio: {sharpe_ratio}')
-        print(f'Sortino Ratio: {sortino_ratio}')
+        # print(f'Sortino Ratio: {sortino_ratio}')
 
 if __name__ == '__main__':
 
