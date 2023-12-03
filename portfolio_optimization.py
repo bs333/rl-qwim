@@ -304,11 +304,11 @@ class PortfolioOptimization:
             done (bool): Whether the episode has ended.
         """
         if np.sum(action) == 0:
-            print("Sum of actions is zero. Cannot normalize.")
-            # Establish a default non-zero action.
+            print("Sum of actions is zero. Assigning default action.")
+            # Establish a default non-zero action, for example, equal allocation to all assets.
             normalized_action = np.ones_like(action) / len(action)
         else:
-            # Ensure the action sums up to 1 (100% of the portfolio).
+            # Normalize the action if the sum is not zero.
             normalized_action = action / np.sum(action)
 
         # Calculate next state
