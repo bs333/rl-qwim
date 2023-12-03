@@ -351,8 +351,9 @@ class PortfolioOptimization:
             # Retrieve the risk-free rate for the current date.
             risk_free_rate = self.get_current_risk_free_rate(current_step_date)
 
+            # Prepare the state from normalized close prices for each ticker.
             state_data = test_data.iloc[current_index:current_index + self.state_window]
-            state = state_data['Normalized_Close'].values.flatten()
+            state = np.concatenate([state_data[f'Normalized_Close_{ticker}'].values for ticker in self.tickers], axis=0).flatten()
 
             action = ppo_agent.select_action(state)
             next_index = current_index + 1
