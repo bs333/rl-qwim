@@ -211,8 +211,8 @@ class PPO:
         advantages = self.calculate_advantages(rewards, values, next_values, dones)
 
         # Initialize dummy values for advantages and old predictions.
-        dummy_advantages = tf.zeros_like(advantages)
-        dummy_old_predictions = tf.zeros_like(self.actor([states, dummy_advantages, dummy_advantages]))
+        dummy_advantages = tf.zeros((len(states), 1))  # Shape based on the advantage input size
+        dummy_old_predictions = tf.zeros((len(states), self.action_dim))  # Shape based on the old prediction input size
 
         # Calculate old predictions once
         old_predictions = self.actor([states, dummy_advantages, dummy_old_predictions])
