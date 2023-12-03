@@ -306,7 +306,7 @@ class PortfolioOptimization:
         if np.sum(action) == 0:
             print("Sum of actions is zero. Assigning default action.")
             # Establish a default non-zero action, for example, equal allocation to all assets.
-            normalized_action = np.ones_like(action) / len(action)
+            normalized_action = np.ones_like(action) / action.size
         else:
             # Normalize the action if the sum is not zero.
             normalized_action = action / np.sum(action)
