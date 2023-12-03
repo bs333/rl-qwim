@@ -219,22 +219,17 @@ class PortfolioOptimization:
 
         return sortino_ratio
 
-    def train_agent(self, episodes: int, actor_lr: float, critic_lr: float, clip_ratio: float, training_interval: int):
+    def train_agent(self, ppo_agent, episodes: int, training_interval: int):
         """
         Trains the PPO agent over a specified number of episodes.
 
         Args:
+            ppo_agent (PPO): Instance of the PPO agent to be trained.
             episodes (int): The number of episodes to train the agent.
-            actor_lr (float): Learning rate for the actor.
-            critic_lr (float): Learning rate for the critic.
-            clip_ratio (float): Clipping ratio for the PPO algorithm.
             training_interval (int): Number of steps to run before updating the PPO agent.
         """
-        # Initialize the PPO agent.
-        ppo_agent = PPO(self.state_window * len(self.tickers), self.num_assets, actor_lr, critic_lr, clip_ratio)
-
         for episode in range(episodes):
-            state, current_index = self.reset_environment() # Reset the environment at the start of each episode.
+            state, current_index = self.reset_environment()  # Reset the environment at the start of each episode.
             total_reward = 0
 
             states, actions, rewards, next_states, dones = [], [], [], [], []
