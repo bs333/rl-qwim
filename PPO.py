@@ -210,13 +210,20 @@ class PPO:
         target_values = self.calculate_discounted_rewards(rewards, dones)
         advantages = self.calculate_advantages(rewards, values, next_values, dones)
 
+        # Initialize dummy values for advantages and old predictions.
+        dummy_advantages = tf.zeros_like(advantages)
+        dummy_old_predictions = tf.zeros_like(self.actor([states, dummy_advantages, dummy_advantages]))
+
+        # Calculate old predictions once
+        old_predictions = self.actor([states, dummy_advantages, dummy_old_predictions])
+
         # Update the actor and critic networks.
         with tf.GradientTape() as actor_tape, tf.GradientTape() as critic_tape:
-            # Calculate current policy probabilities.
-            current_probs = self.actor([states, advantages, self.actor(states)])
+            # Calculate current policy probabilities using correct inputs.
+            current_probs = self.actor([states, advantages, old_predictions])
 
             # Calculate policy loss.
-            p_loss = self.policy_loss(advantages, self.actor(states), actions, current_probs, self.clip_ratio)
+            p_loss = self.policy_loss(advantages, old_predictions, actions, current_probs, self.clip_ratio)
 
             # Recompute critic values and calculate value loss.
             values = self.critic(states)
@@ -228,17 +235,14 @@ class PPO:
             if tf.math.is_nan(v_loss):
                 print("NaN detected in value loss")
 
-
         # Compute gradients and update actor network.
         actor_grads = actor_tape.gradient(p_loss, self.actor.trainable_variables)
-        if any(tf.reduce_any(tf.math.is_nan(grad)) for grad in actor_grads):
-            print("NaN detected in actor gradients")
+        actor_grads = [tf.clip_by_norm(g, 1.0) for g in actor_grads]  # Gradient clipping
         self.actor_optimizer.apply_gradients(zip(actor_grads, self.actor.trainable_variables))
 
         # Compute gradients and update critic network.
         critic_grads = critic_tape.gradient(v_loss, self.critic.trainable_variables)
-        if any(tf.reduce_any(tf.math.is_nan(grad)) for grad in critic_grads):
-            print("NaN detected in critic gradients")
+        critic_grads = [tf.clip_by_norm(g, 1.0) for g in critic_grads]  # Gradient clipping
         self.critic_optimizer.apply_gradients(zip(critic_grads, self.critic.trainable_variables))
 
     def calculate_discounted_rewards(self, rewards: tf.Tensor, dones: tf.Tensor, gamma: float = 0.99) -> tf.Tensor:
