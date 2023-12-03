@@ -116,16 +116,7 @@ class PPO:
     def policy_loss(self, advantages: tf.Tensor, old_probs: tf.Tensor, actions: tf.Tensor, new_probs: tf.Tensor, clip_ratio: float) -> tf.Tensor:
         """
         Computes the PPO policy loss.
-
-        Args:
-            advantages (tf.Tensor): The advantage estimates for the actions taken.
-            old_probs (tf.Tensor): The action probabilities under the old policy.
-            actions (tf.Tensor): The actions taken.
-            new_probs (tf.Tensor): The action probabilities under the current policy.
-            clip_ratio (float): The clipping parameter epsilon, used to define the bounds of the clipping.
-
-        Returns:
-            tf.Tensor: The computed policy loss.
+        [Your existing comments and documentation]
         """
 
         # Convert actions to a one-hot encoding.
@@ -136,7 +127,7 @@ class PPO:
         old_probs = tf.reduce_sum(old_probs * actions_one_hot, axis=-1)
         ratio = tf.exp(tf.math.log(probs) - tf.math.log(old_probs))
 
-        # Evaluted the clipped function.
+        # Evaluated the clipped function.
         clipped_ratio = tf.clip_by_value(ratio, 1.0 - clip_ratio, 1.0 + clip_ratio)
         clipped_surrogate = clipped_ratio * advantages
 
@@ -144,12 +135,9 @@ class PPO:
         unclipped_surrogate = ratio * advantages
 
         # Debugging: Check for NaNs in inputs to the loss function
-        if any(tf.reduce_any(tf.math.is_nan(tensor)) for tensor in [advantages, old_probs, actions, new_probs]):
-            print("NaN detected in loss function inputs")
-            # Print individual tensors to identify which one has NaNs
-            for tensor in [advantages, old_probs, actions, new_probs]:
-                if tf.reduce_any(tf.math.is_nan(tensor)):
-                    print(f"NaNs in {tensor.name}: {tensor}")
+        for tensor in [advantages, old_probs, new_probs]:
+            if tf.reduce_any(tf.math.is_nan(tensor)):
+                print(f"NaNs in {tensor.name}: {tensor}")
 
         # Take the minimum of the clipped and unclipped surrogate functions to form the final objective function.
         loss = -tf.reduce_mean(tf.minimum(unclipped_surrogate, clipped_surrogate))
