@@ -303,8 +303,13 @@ class PortfolioOptimization:
             reward (float): The reward received after taking the action.
             done (bool): Whether the episode has ended.
         """
-        # Ensure action is normalized (sums to 1)
-        normalized_action = action / np.sum(action)
+        if np.sum(action) == 0:
+            print("Sum of actions is zero. Cannot normalize.")
+            # Establish a default non-zero action.
+            normalized_action = np.ones_like(action) / len(action)
+        else:
+            # Ensure the action sums up to 1 (100% of the portfolio).
+            normalized_action = action / np.sum(action)
 
         # Calculate next state
         next_index = current_index + 1
