@@ -173,9 +173,9 @@ class PPO:
         """
 
         # Check for NaNs in inputs.
-        for name, data in zip(["states", "actions", "rewards", "next_states", "dones"], [states, actions, rewards, next_states, dones]):
-            if np.isnan(data).any():
-                print(f"NaNs detected in input {name}")
+        # for name, data in zip(["states", "actions", "rewards", "next_states", "dones"], [states, actions, rewards, next_states, dones]):
+        #     if np.isnan(data).any():
+        #         print(f"NaNs detected in input {name}")
 
         # Convert numpy arrays to TensorFlow tensors.
         states = tf.convert_to_tensor(states, dtype=tf.float32)
