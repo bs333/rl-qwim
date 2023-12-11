@@ -424,7 +424,7 @@ if __name__ == '__main__':
 
     # Train the PPO agent.
     portfolio_opt.train_agent(ppo_agent, 
-                              episodes=10, 
+                              episodes=100, 
                               training_interval=10)
 
     # Evaluate the trained agent.
