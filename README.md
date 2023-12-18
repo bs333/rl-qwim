@@ -37,10 +37,3 @@ The project utilizes historical financial data, including price, volume, and oth
 
 ### Contribution
 This project contributes to the growing field of AI in finance by demonstrating the practical utility of advanced RL algorithms in making strategic investment decisions. It aims to showcase the potential of RL in navigating the complexities of modern financial markets, offering innovative solutions for portfolio management.
-
-### Target Audience
-The project is intended for financial analysts, quantitative researchers, data scientists, and anyone interested in the application of machine learning in finance.
-
-### Setup and Usage
-- Detailed instructions on setting up the environment and running the scripts will be provided.
-- The project includes user-friendly documentation for each algorithm and its application in portfolio management.
