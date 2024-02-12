@@ -17,6 +17,7 @@ class LogisticRegressionPortfolioOptimizer:
         end_date (str): The end date for historical data retrieval.
         data (pd.DataFrame): DataFrame containing the historical data.
         models (Dict[str, Tuple[LogisticRegression, StandardScaler]]): Dictionary mapping ticker symbols to tuples of trained logistic regression models and their associated scalers.
+        allocations (Dict[str, List[int]]): Dictionary mapping ticker symbols to lists of daily allocation decisions (1 for predicted up, 0 for predicted down).
     """
 
     def __init__(self, tickers: list[str], start_date: str, end_date: str) -> None:
@@ -119,5 +120,4 @@ if __name__ == '__main__':
     allocations = optimizer.predict_allocation()
     
     print('Predicted Allocations:', allocations)
-
 
