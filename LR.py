@@ -18,6 +18,7 @@ class LogisticRegressionPortfolioOptimizer:
         data (pd.DataFrame): DataFrame containing the historical data.
         models (Dict[str, Tuple[LogisticRegression, StandardScaler]]): Dictionary mapping ticker symbols to tuples of trained logistic regression models and their associated scalers.
     """
+
     def __init__(self, tickers: list[str], start_date: str, end_date: str) -> None:
         """
         Initializes the LogisticRegressionPortfolioOptimizer with given tickers and date range.
@@ -32,3 +33,8 @@ class LogisticRegressionPortfolioOptimizer:
         self.end_date = end_date
         self.data = None
         self.models: Dict[str, Tuple[LogisticRegression, StandardScaler]] = {}
+
+    def load_data(self) -> None:
+        """Loads financial data from Yahoo Finance for the specified tickers and date range."""
+        self.data = yf.download(self.tickers, start=self.start_date, end=self.end_date)
+
