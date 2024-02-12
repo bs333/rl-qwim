@@ -107,4 +107,17 @@ class LogisticRegressionPortfolioOptimizer:
             allocations[ticker] = prediction
         
         return allocations
+    
+if __name__ == '__main__':
+    tickers = ['AAPL', 'MSFT', 'GOOG', 'AMZN']
+    start_date = '2010-01-01'
+    end_date = '2022-12-31'
+
+    optimizer = LogisticRegressionPortfolioOptimizer(tickers, start_date, end_date)
+    optimizer.load_data()
+    optimizer.train_models()
+    allocations = optimizer.predict_allocation()
+    
+    print('Predicted Allocations:', allocations)
+
 
