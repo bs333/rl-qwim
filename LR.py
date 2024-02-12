@@ -34,6 +34,7 @@ class LogisticRegressionPortfolioOptimizer:
         self.end_date = end_date
         self.data = None
         self.models: Dict[str, Tuple[LogisticRegression, StandardScaler]] = {}
+        self.allocations: Dict[str, List[int]] = {ticker: [] for ticker in tickers}
 
     def load_data(self) -> None:
         """Loads financial data from Yahoo Finance for the specified tickers and date range."""
