@@ -56,4 +56,31 @@ class LogisticRegressionPortfolioOptimizer:
 
         return features, outcomes
 
+    def train_models(self) -> None:
+        """
+        Trains logistic regression models for each ticker symbol based on historical data.
+        """
+        features, outcomes = self.preprocess_data()
+        
+        for ticker in self.tickers:
+            X = features[ticker].values.reshape(-1, 1)  # Features matrix
+            y = outcomes[ticker].values  # Target vector
+            
+            # Split data into training and testing sets
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
+            # Standardize features
+            scaler = StandardScaler()
+            X_train_scaled = scaler.fit_transform(X_train)
+            X_test_scaled = scaler.transform(X_test)
+
+            # Initialize and train the logistic regression model
+            model = LogisticRegression()
+            model.fit(X_train_scaled, y_train)
+            
+            # Evaluate the model
+            y_pred = model.predict(X_test_scaled)
+            accuracy = accuracy_score(y_test, y_pred)
+            print(f'{ticker} Model Accuracy: {accuracy:.2f}')
+            
+            self.models[ticker] = (model, scaler)
