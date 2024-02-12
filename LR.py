@@ -16,8 +16,10 @@ class LogisticRegressionPortfolioOptimizer:
         start_date (str): The start date for historical data retrieval.
         end_date (str): The end date for historical data retrieval.
         data (pd.DataFrame): DataFrame containing the historical data.
-        models (Dict[str, Tuple[LogisticRegression, StandardScaler]]): Dictionary mapping ticker symbols to tuples of trained logistic regression models and their associated scalers.
-        allocations (Dict[str, List[int]]): Dictionary mapping ticker symbols to lists of daily allocation decisions (1 for predicted up, 0 for predicted down).
+        models (Dict[str, Tuple[LogisticRegression, StandardScaler]]): Dictionary mapping ticker symbols to tuples of trained 
+        logistic regression models and their associated scalers.
+        allocations (Dict[str, List[int]]): Dictionary mapping ticker symbols to lists of daily allocation decisions 
+        (1 for predicted up, 0 for predicted down).
     """
 
     def __init__(self, tickers: list[str], start_date: str, end_date: str) -> None:
@@ -69,7 +71,7 @@ class LogisticRegressionPortfolioOptimizer:
             y = outcomes[ticker].values  # Target vector
             
             # Split data into training and testing sets
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
             # Standardize features
             scaler = StandardScaler()
@@ -119,17 +121,17 @@ class LogisticRegressionPortfolioOptimizer:
         return self.allocations
     
 if __name__ == '__main__':
-    tickers = ['AAPL', 'MSFT', 'GOOG', 'AMZN']
-    start_date = '2010-01-01'
-    end_date = '2022-12-31'
+    tickers = ['IWD', 'IWF', 'IWO', 'EWJ']
+    start_date = '2001-01-01'
+    end_date = '2023-12-31'
 
     optimizer = LogisticRegressionPortfolioOptimizer(tickers, start_date, end_date)
     optimizer.load_data()
     optimizer.train_models()
     
     # Predict allocations for a specified period
-    prediction_start_date = '2022-01-01'
-    prediction_end_date = '2022-12-31'
+    prediction_start_date = '2021-01-01'
+    prediction_end_date = '2023-12-31'
     daily_allocations = optimizer.predict_daily_allocations(prediction_start_date, prediction_end_date)
     
     print('Daily Predicted Allocations:', daily_allocations)
