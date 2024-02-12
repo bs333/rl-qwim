@@ -18,9 +18,17 @@ class LogisticRegressionPortfolioOptimizer:
         data (pd.DataFrame): DataFrame containing the historical data.
         models (Dict[str, Tuple[LogisticRegression, StandardScaler]]): Dictionary mapping ticker symbols to tuples of trained logistic regression models and their associated scalers.
     """
-    def __init__(self, tickers, start_date, end_date):
+    def __init__(self, tickers: list[str], start_date: str, end_date: str) -> None:
+        """
+        Initializes the LogisticRegressionPortfolioOptimizer with given tickers and date range.
+
+        Args:
+            tickers (List[str]): List of ticker symbols.
+            start_date (str): Start date in 'YYYY-MM-DD' format.
+            end_date (str): End date in 'YYYY-MM-DD' format.
+        """
         self.tickers = tickers
         self.start_date = start_date
         self.end_date = end_date
         self.data = None
-        self.models = {}
+        self.models: Dict[str, Tuple[LogisticRegression, StandardScaler]] = {}
