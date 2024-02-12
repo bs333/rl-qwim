@@ -1,19 +1,37 @@
-from portfolio_optimization import *
+import yfinance as yf
 import pulp
+import numpy as np
 
-portfolio_opt = PortfolioOptimization(tickers=["IWD", "IWF", "IWO", "EWJ","EEM"], 
-                                        start_date="2004-01-01", 
-                                        end_date="2022-12-31")
 
-# Load and preprocess data.
-portfolio_opt.load_data()
-portfolio_opt.clean_data()
-portfolio_opt.normalize_data()
+tickers = ["IWD", "IWF", "IWO", "EWJ","EEM"] # list of ETFs
 
-# Split data into training and testing.
-train_data, test_data = portfolio_opt.split_data("2020-01-01")
+ETFdata = yf.download(tickers, start="2004-01-01", end="2022-12-31")['Adj Close']
 
-# make a new table for just daily returns, then use pulp to conduct the optimization
+dailyReturns = stock_data.pct_change().dropna() # daily returns
 
-if __name__ == "__main__":
-    print(train_data["Normalized_Close_EEM"])
+expectedReturns = returns.mean().values # expected returns
+covarianceMatrix = returns.cov().values #covariance matrix
+
+binIntProb = pulp.LpProblem("ETF_Selection", pulp.LpMaximize) # binary programming problem
+
+selected = {}
+for i in range(len(tickers)):
+    selected = pulp.LpVariable(f"Selected_{i}", cat='Binary')
+
+
+for p in range(len(tickers)):
+    binIntProb += pulp.lpSum(selected[i] * expected_returns[i]) # Our objective is to maximize expected return
+
+
+# define and add constraints
+maxSelectedETFs = len(tickers)  # maximum number of ETFs to select
+
+for j in range(len(tickers)):
+    binIntProb += pulp.lpSum(selected[i] <= maxSelectedETFs
+
+binIntProb.solve() # solve the problem
+
+print("Selected ETFs")
+for i in range(len(tickers)):
+    if selected[i].value() == 1:
+        print(f"ETF {tickers[i+1]}: Return = {expectedReturns[i]}")
