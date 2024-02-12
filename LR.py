@@ -38,3 +38,22 @@ class LogisticRegressionPortfolioOptimizer:
         """Loads financial data from Yahoo Finance for the specified tickers and date range."""
         self.data = yf.download(self.tickers, start=self.start_date, end=self.end_date)
 
+    def preprocess_data(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        Prepares the data for logistic regression by calculating daily returns and creating binary outcomes.
+
+        Returns:
+            Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing the features (previous day's returns) and outcomes (binary indicators of price movement direction).
+        """
+        # Calculate daily returns
+        daily_returns = self.data['Close'].pct_change()
+
+        # Calculate binary outcomes: 1 for positive return, 0 for negative
+        outcomes = (daily_returns > 0).astype(int)
+
+        # Use previous day's returns as features
+        features = daily_returns.shift(1).fillna(0)
+
+        return features, outcomes
+
+
