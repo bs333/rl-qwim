@@ -126,7 +126,11 @@ if __name__ == '__main__':
     optimizer = LogisticRegressionPortfolioOptimizer(tickers, start_date, end_date)
     optimizer.load_data()
     optimizer.train_models()
-    allocations = optimizer.predict_allocation()
     
-    print('Predicted Allocations:', allocations)
+    # Predict allocations for a specified period
+    prediction_start_date = '2022-01-01'
+    prediction_end_date = '2022-12-31'
+    daily_allocations = optimizer.predict_daily_allocations(prediction_start_date, prediction_end_date)
+    
+    print('Daily Predicted Allocations:', daily_allocations)
 
