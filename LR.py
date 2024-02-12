@@ -84,3 +84,27 @@ class LogisticRegressionPortfolioOptimizer:
             print(f'{ticker} Model Accuracy: {accuracy:.2f}')
             
             self.models[ticker] = (model, scaler)
+
+    def predict_allocation(self) -> Dict[str, int]:
+        """
+        Predicts the next day's direction for each asset and suggests allocations based on these predictions.
+
+        Returns:
+            Dict[str, int]: A dictionary mapping ticker symbols to allocation decisions (1 for predicted up, 0 for predicted down).
+        """
+        # Assume we predict using the most recent data
+        last_day_returns = self.data['Close'].pct_change().iloc[-1]
+
+        allocations: Dict[str, int] = {}
+        for ticker, (model, scaler) in self.models.items():
+            # Standardize the feature
+            feature = scaler.transform([[last_day_returns[ticker]]])
+            
+            # Predict the direction (1 for up, 0 for down)
+            prediction = model.predict(feature)[0]
+            
+            # Allocate based on prediction (simple strategy: 1 for predicted up, 0 for predicted down)
+            allocations[ticker] = prediction
+        
+        return allocations
+
