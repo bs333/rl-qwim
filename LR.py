@@ -87,28 +87,36 @@ class LogisticRegressionPortfolioOptimizer:
             
             self.models[ticker] = (model, scaler)
 
-    def predict_allocation(self) -> Dict[str, int]:
+    def predict_daily_allocations(self, start_date: str, end_date: str) -> Dict[str, List[int]]:
         """
-        Predicts the next day's direction for each asset and suggests allocations based on these predictions.
+        Predicts daily allocations for each asset within the specified date range.
+
+        Args:
+            start_date (str): The start date for the prediction period in 'YYYY-MM-DD' format.
+            end_date (str): The end date for the prediction period in 'YYYY-MM-DD' format.
 
         Returns:
-            Dict[str, int]: A dictionary mapping ticker symbols to allocation decisions (1 for predicted up, 0 for predicted down).
+            Dict[str, List[int]]: A dictionary mapping ticker symbols to lists of daily allocation decisions.
         """
-        # Assume we predict using the most recent data
-        last_day_returns = self.data['Close'].pct_change().iloc[-1]
+        # Filter the data for the specified date range
+        date_mask = (self.data.index >= start_date) & (self.data.index <= end_date)
+        filtered_data = self.data.loc[date_mask]
 
-        allocations: Dict[str, int] = {}
-        for ticker, (model, scaler) in self.models.items():
-            # Standardize the feature
-            feature = scaler.transform([[last_day_returns[ticker]]])
+        # Iterate over each day in the filtered data
+        for current_date in filtered_data.index[:-1]:  # Exclude the last day since we can't predict the next day's movement
+            last_day_returns = self.data['Close'].pct_change().loc[current_date]
             
-            # Predict the direction (1 for up, 0 for down)
-            prediction = model.predict(feature)[0]
-            
-            # Allocate based on prediction (simple strategy: 1 for predicted up, 0 for predicted down)
-            allocations[ticker] = prediction
-        
-        return allocations
+            for ticker, (model, scaler) in self.models.items():
+                # Standardize the feature for the current day
+                feature = scaler.transform([[last_day_returns[ticker]]])
+                
+                # Predict the direction for the next day (1 for up, 0 for down)
+                prediction = model.predict(feature)[0]
+                
+                # Append the prediction to the allocations list for the ticker
+                self.allocations[ticker].append(prediction)
+
+        return self.allocations
     
 if __name__ == '__main__':
     tickers = ['AAPL', 'MSFT', 'GOOG', 'AMZN']
