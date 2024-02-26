@@ -131,7 +131,7 @@ if __name__ == '__main__':
     tickers = ['IWD', 'IWF', 'IWO', 'EWJ']
     start_date = '2001-01-01'
     end_date = '2023-12-31'
-    frequency = 'W'  # Use 'D' for daily, 'W' for weekly, or 'M' for monthly allocations.
+    frequency = 'M'  # Use 'D' for daily, 'W' for weekly, or 'M' for monthly allocations.
 
 
     optimizer = LogisticRegressionPortfolioOptimizer(tickers, start_date, end_date, frequency)
