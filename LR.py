@@ -96,16 +96,6 @@ class LogisticRegressionPortfolioOptimizer:
             self.models[ticker] = (model, scaler)
 
     def predict_allocations(self, start_date: str, end_date: str) -> Dict[str, List[int]]:
-        """
-        Predicts allocations for each asset within the specified date range based on the frequency.
-
-        Args:
-            start_date (str): The start date for the prediction period in 'YYYY-MM-DD' format.
-            end_date (str): The end date for the prediction period in 'YYYY-MM-DD' format.
-
-        Returns:
-            Dict[str, List[int]]: A dictionary mapping ticker symbols to lists of allocation decisions.
-        """
         # Filter and resample the data for the specified date range.
         date_mask = (self.data.index >= start_date) & (self.data.index <= end_date)
         filtered_data = self.data.loc[date_mask]
@@ -121,8 +111,13 @@ class LogisticRegressionPortfolioOptimizer:
         for current_date, _ in resampled_data.iterrows():
             for ticker, (model, scaler) in self.models.items():
                 if current_date in resampled_data.index:
+                    # Prepare the feature for the current period, ensuring no NaN values
+                    feature_value = resampled_data[ticker].loc[current_date]
+                    if pd.isna(feature_value):  # Check if the feature value is NaN
+                        continue  # Skip this iteration if the feature value is NaN
+
                     # Standardize the feature for the current period
-                    feature = scaler.transform([[resampled_data[ticker].loc[current_date]]])
+                    feature = scaler.transform([[feature_value]])
                     
                     # Predict the direction for the next period (1 for up, 0 for down).
                     prediction = model.predict(feature)[0]
@@ -131,6 +126,7 @@ class LogisticRegressionPortfolioOptimizer:
                     self.allocations[ticker].append(prediction)
 
         return self.allocations
+
     
 if __name__ == '__main__':
     tickers = ['IWD', 'IWF', 'IWO', 'EWJ']
