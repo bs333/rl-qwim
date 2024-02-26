@@ -34,6 +34,7 @@ class LogisticRegressionPortfolioOptimizer:
         self.tickers = tickers
         self.start_date = start_date
         self.end_date = end_date
+        self.frequency = frequency
         self.data = None
         self.models: Dict[str, Tuple[LogisticRegression, StandardScaler]] = {}
         self.allocations: Dict[str, List[int]] = {ticker: [] for ticker in tickers}
