@@ -147,6 +147,8 @@ if __name__ == '__main__':
     prediction_start_date = '2021-01-01'
     prediction_end_date = '2023-12-31'
     allocations = optimizer.predict_daily_allocations(prediction_start_date, prediction_end_date)
-    
-    print('Allocations:', allocations)
+
+    # Print the allocations with frequency information.
+    frequency_map = {'D': 'Daily', 'W': 'Weekly', 'M': 'Monthly'}
+    print(f"{frequency_map.get(frequency, 'Specified')} Allocations:", allocations)
 
