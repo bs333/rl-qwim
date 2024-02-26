@@ -139,14 +139,14 @@ if __name__ == '__main__':
     frequency = 'W'  # Use 'D' for daily, 'W' for weekly, or 'M' for monthly allocations.
 
 
-    optimizer = LogisticRegressionPortfolioOptimizer(tickers, start_date, end_date)
+    optimizer = LogisticRegressionPortfolioOptimizer(tickers, start_date, end_date, frequency)
     optimizer.load_data()
     optimizer.train_models()
     
-    # Predict allocations for a specified period
+    # Predict allocations for a specified period.
     prediction_start_date = '2021-01-01'
     prediction_end_date = '2023-12-31'
-    daily_allocations = optimizer.predict_daily_allocations(prediction_start_date, prediction_end_date)
+    allocations = optimizer.predict_daily_allocations(prediction_start_date, prediction_end_date)
     
-    print('Daily Predicted Allocations:', daily_allocations)
+    print('Allocations:', allocations)
 
