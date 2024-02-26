@@ -95,34 +95,40 @@ class LogisticRegressionPortfolioOptimizer:
             
             self.models[ticker] = (model, scaler)
 
-    def predict_daily_allocations(self, start_date: str, end_date: str) -> Dict[str, List[int]]:
+    def predict_allocations(self, start_date: str, end_date: str) -> Dict[str, List[int]]:
         """
-        Predicts daily allocations for each asset within the specified date range.
+        Predicts allocations for each asset within the specified date range based on the frequency.
 
         Args:
             start_date (str): The start date for the prediction period in 'YYYY-MM-DD' format.
             end_date (str): The end date for the prediction period in 'YYYY-MM-DD' format.
 
         Returns:
-            Dict[str, List[int]]: A dictionary mapping ticker symbols to lists of daily allocation decisions.
+            Dict[str, List[int]]: A dictionary mapping ticker symbols to lists of allocation decisions.
         """
-        # Filter the data for the specified date range
+        # Filter and resample the data for the specified date range
         date_mask = (self.data.index >= start_date) & (self.data.index <= end_date)
         filtered_data = self.data.loc[date_mask]
 
-        # Iterate over each day in the filtered data
-        for current_date in filtered_data.index[:-1]:  # Exclude the last day since we can't predict the next day's movement
-            last_day_returns = self.data['Close'].pct_change().loc[current_date]
-            
+        if self.frequency == 'W':
+            resampled_data = filtered_data['Close'].resample('W').ffill().pct_change()
+        elif self.frequency == 'M':
+            resampled_data = filtered_data['Close'].resample('M').ffill().pct_change()
+        else:  # Handle daily frequency
+            resampled_data = filtered_data['Close'].pct_change()
+
+        # Iterate over each period in the resampled data
+        for current_date, _ in resampled_data.iterrows():
             for ticker, (model, scaler) in self.models.items():
-                # Standardize the feature for the current day
-                feature = scaler.transform([[last_day_returns[ticker]]])
-                
-                # Predict the direction for the next day (1 for up, 0 for down)
-                prediction = model.predict(feature)[0]
-                
-                # Append the prediction to the allocations list for the ticker
-                self.allocations[ticker].append(prediction)
+                if current_date in resampled_data.index:
+                    # Standardize the feature for the current period
+                    feature = scaler.transform([[resampled_data[ticker].loc[current_date]]])
+                    
+                    # Predict the direction for the next period (1 for up, 0 for down)
+                    prediction = model.predict(feature)[0]
+                    
+                    # Append the prediction to the allocations list for the ticker
+                    self.allocations[ticker].append(prediction)
 
         return self.allocations
     
