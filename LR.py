@@ -18,7 +18,7 @@ class LogisticRegressionPortfolioOptimizer:
         data (pd.DataFrame): DataFrame containing the historical data.
         models (Dict[str, Tuple[LogisticRegression, StandardScaler]]): Dictionary mapping ticker symbols to tuples of trained 
         logistic regression models and their associated scalers.
-        allocations (Dict[str, List[int]]): Dictionary mapping ticker symbols to lists of daily allocation decisions 
+        allocations (Dict[str, List[int]]): Dictionary mapping ticker symbols to lists of daily, weekly, or monthly allocation decisions 
         (1 for predicted up, 0 for predicted down).
     """
 
@@ -111,12 +111,12 @@ class LogisticRegressionPortfolioOptimizer:
         for current_date, _ in resampled_data.iterrows():
             for ticker, (model, scaler) in self.models.items():
                 if current_date in resampled_data.index:
-                    # Prepare the feature for the current period, ensuring no NaN values
+                    # Prepare the feature for the current period, ensuring no NaN values.
                     feature_value = resampled_data[ticker].loc[current_date]
-                    if pd.isna(feature_value):  # Check if the feature value is NaN
-                        continue  # Skip this iteration if the feature value is NaN
+                    if pd.isna(feature_value):  # Check if the feature value is NaN.
+                        continue  # Skip this iteration if the feature value is NaN.
 
-                    # Standardize the feature for the current period
+                    # Standardize the feature for the current period.
                     feature = scaler.transform([[feature_value]])
                     
                     # Predict the direction for the next period (1 for up, 0 for down).
@@ -126,7 +126,6 @@ class LogisticRegressionPortfolioOptimizer:
                     self.allocations[ticker].append(prediction)
 
         return self.allocations
-
     
 if __name__ == '__main__':
     tickers = ['IWD', 'IWF', 'IWO', 'EWJ']
