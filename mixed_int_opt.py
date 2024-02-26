@@ -39,7 +39,7 @@ def optimize_portfolio_with_risk(stocks, returns, cov_matrix, min_return, max_st
         cp.sum(w) == 1, # Sum of weights is 1
         w >= 0, # No short selling
         cp.sum(x) == max_stocks,
-        w <= x, # Select exactly max_stocks stocks
+        w <= x,
         cp.sum(cp.multiply(w, returns)) >= min_return # Minimum expected return
     ]
 

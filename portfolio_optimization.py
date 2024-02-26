@@ -412,9 +412,6 @@ if __name__ == '__main__':
                                           end_date="2024-01-01")
 
     # Load and preprocess data.
-    portfolio_opt.load_data()
-    portfolio_opt.clean_data()
-    portfolio_opt.normalize_data()
     
     # Split data into training and testing.
     train_data, test_data = portfolio_opt.split_data("2020-01-01")
