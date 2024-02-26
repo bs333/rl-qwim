@@ -45,19 +45,24 @@ class LogisticRegressionPortfolioOptimizer:
 
     def preprocess_data(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
-        Prepares the data for logistic regression by calculating daily returns and creating binary outcomes.
+        Prepares the data by calculating returns and creating binary outcomes for the specified frequency.
 
         Returns:
-            Tuple[pd.DataFrame, pd.DataFrame]: A tuple containing the features (previous day's returns) and outcomes (binary indicators of price movement direction).
+            Tuple[pd.DataFrame, pd.DataFrame]: Features (previous period's returns) and outcomes (binary indicators of price movement direction).
         """
-        # Calculate daily returns
-        daily_returns = self.data['Close'].pct_change()
+        # Resample data according to the specified frequency
+        if self.frequency == 'W':
+            period_returns = self.data['Close'].resample('W').ffill().pct_change()
+        elif self.frequency == 'M':
+            period_returns = self.data['Close'].resample('M').ffill().pct_change()
+        else:  # Default to daily if frequency is 'D' or otherwise unspecified
+            period_returns = self.data['Close'].pct_change()
 
         # Calculate binary outcomes: 1 for positive return, 0 for negative
-        outcomes = (daily_returns > 0).astype(int)
+        outcomes = (period_returns > 0).astype(int)
 
-        # Use previous day's returns as features
-        features = daily_returns.shift(1).fillna(0)
+        # Use previous period's returns as features
+        features = period_returns.shift(1).fillna(0)
 
         return features, outcomes
 
