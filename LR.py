@@ -76,7 +76,7 @@ class LogisticRegressionPortfolioOptimizer:
             X = features[ticker].values.reshape(-1, 1)  # Features matrix
             y = outcomes[ticker].values  # Target vector
             
-            # Split data into training and testing sets
+            # Split data into training and testing sets.
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
             # Standardize features
@@ -84,7 +84,7 @@ class LogisticRegressionPortfolioOptimizer:
             X_train_scaled = scaler.fit_transform(X_train)
             X_test_scaled = scaler.transform(X_test)
 
-            # Initialize and train the logistic regression model
+            # Initialize and train the logistic regression model.
             model = LogisticRegression()
             model.fit(X_train_scaled, y_train)
             
@@ -106,7 +106,7 @@ class LogisticRegressionPortfolioOptimizer:
         Returns:
             Dict[str, List[int]]: A dictionary mapping ticker symbols to lists of allocation decisions.
         """
-        # Filter and resample the data for the specified date range
+        # Filter and resample the data for the specified date range.
         date_mask = (self.data.index >= start_date) & (self.data.index <= end_date)
         filtered_data = self.data.loc[date_mask]
 
@@ -114,20 +114,20 @@ class LogisticRegressionPortfolioOptimizer:
             resampled_data = filtered_data['Close'].resample('W').ffill().pct_change()
         elif self.frequency == 'M':
             resampled_data = filtered_data['Close'].resample('M').ffill().pct_change()
-        else:  # Handle daily frequency
+        else:  # Handle daily frequency.
             resampled_data = filtered_data['Close'].pct_change()
 
-        # Iterate over each period in the resampled data
+        # Iterate over each period in the resampled data.
         for current_date, _ in resampled_data.iterrows():
             for ticker, (model, scaler) in self.models.items():
                 if current_date in resampled_data.index:
                     # Standardize the feature for the current period
                     feature = scaler.transform([[resampled_data[ticker].loc[current_date]]])
                     
-                    # Predict the direction for the next period (1 for up, 0 for down)
+                    # Predict the direction for the next period (1 for up, 0 for down).
                     prediction = model.predict(feature)[0]
                     
-                    # Append the prediction to the allocations list for the ticker
+                    # Append the prediction to the allocations list for the ticker.
                     self.allocations[ticker].append(prediction)
 
         return self.allocations
@@ -136,6 +136,8 @@ if __name__ == '__main__':
     tickers = ['IWD', 'IWF', 'IWO', 'EWJ']
     start_date = '2001-01-01'
     end_date = '2023-12-31'
+    frequency = 'W'  # Use 'D' for daily, 'W' for weekly, or 'M' for monthly allocations.
+
 
     optimizer = LogisticRegressionPortfolioOptimizer(tickers, start_date, end_date)
     optimizer.load_data()

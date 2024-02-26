@@ -2,6 +2,7 @@
     "cSpell.words": [
         "astype",
         "ffill",
-        "fillna"
+        "fillna",
+        "iterrows"
     ]
 }
