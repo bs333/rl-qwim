@@ -399,10 +399,17 @@ class PortfolioOptimization:
 
 if __name__ == '__main__':
 
-    # Initialize PortfolioOptimization.
-    portfolio_opt = PortfolioOptimization(tickers=["IWD", "IWF", "IWO", "EWJ"], 
-                                          start_date="2001-01-01", 
-                                          end_date="2022-12-31")
+    from mixed_int_opt import optimize_portfolio_with_risk, getExpRetCovMatr
+    
+    tickers = ['IJH', 'IWM', "SPY", "EEM", "EWJ", "TIP", "DBO", "FXE","CEW","USCI"]
+
+    expected_ret, covar_matrix = getExpRetCovMatr(tickers)
+
+    selected_tickers, portfolio_return, portfolio_risk, weights = optimize_portfolio_with_risk(tickers, expected_returns, covariance_matrix, min_return, max_stocks)
+
+    portfolio_opt = PortfolioOptimization(selected_tickers, 
+                                          start_date="2010-01-01", 
+                                          end_date="2024-01-01")
 
     # Load and preprocess data.
     portfolio_opt.load_data()
