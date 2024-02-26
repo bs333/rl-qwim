@@ -22,7 +22,7 @@ class LogisticRegressionPortfolioOptimizer:
         (1 for predicted up, 0 for predicted down).
     """
 
-    def __init__(self, tickers: list[str], start_date: str, end_date: str) -> None:
+    def __init__(self, tickers: list[str], start_date: str, end_date: str, frequency: str = 'D') -> None:
         """
         Initializes the LogisticRegressionPortfolioOptimizer with given tickers and date range.
 
@@ -50,18 +50,18 @@ class LogisticRegressionPortfolioOptimizer:
         Returns:
             Tuple[pd.DataFrame, pd.DataFrame]: Features (previous period's returns) and outcomes (binary indicators of price movement direction).
         """
-        # Resample data according to the specified frequency
+        # Resample data according to the specified frequency.
         if self.frequency == 'W':
             period_returns = self.data['Close'].resample('W').ffill().pct_change()
         elif self.frequency == 'M':
             period_returns = self.data['Close'].resample('M').ffill().pct_change()
-        else:  # Default to daily if frequency is 'D' or otherwise unspecified
+        else:  # Default to daily if frequency is 'D' or otherwise unspecified.
             period_returns = self.data['Close'].pct_change()
 
-        # Calculate binary outcomes: 1 for positive return, 0 for negative
+        # Calculate binary outcomes: 1 for positive return, 0 for negative.
         outcomes = (period_returns > 0).astype(int)
 
-        # Use previous period's returns as features
+        # Use previous period's returns as features.
         features = period_returns.shift(1).fillna(0)
 
         return features, outcomes
