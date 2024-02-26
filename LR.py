@@ -151,4 +151,3 @@ if __name__ == '__main__':
     # Print the allocations with frequency information.
     frequency_map = {'D': 'Daily', 'W': 'Weekly', 'M': 'Monthly'}
     print(f"{frequency_map.get(frequency, 'Specified')} Allocations:", allocations)
-
