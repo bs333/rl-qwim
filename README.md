@@ -1,39 +1,54 @@
-## Reinforcement Learning in Quantitative Wealth Investment Management (QWIM)
+# Deep Reinforcement Learning in Quantitative Wealth Investment Management (QWIM)
 
-### Overview
+## Overview
 
-#### Reinforcement Learning (RL) in Finance
-Reinforcement Learning (RL) stands as a pioneering approach in the realm of machine learning, particularly in the dynamic and complex world of finance. Unlike supervised or unsupervised learning methods, RL emphasizes learning through feedback and experience rather than relying on a fixed set of training data. It is characterized by its ability to learn what actions to take in different situations to maximize a numerical reward signal.
+### Deep Reinforcement Learning (DRL) in Finance
+Deep Reinforcement Learning (DRL) represents a cutting-edge paradigm in machine learning, specifically tailored for navigating the dynamic complexities of financial markets. Unlike traditional supervised and unsupervised learning techniques, DRL leverages an interactive trial-and-error approach to maximize cumulative rewards over time, making it uniquely suited for sequential decision-making problems in finance.
 
-The core of RL lies in its trial-and-error search combined with the concept of delayed reward. This method enables an agent (the decision-maker) to discover optimal actions through their own experiences, understanding the trade-offs between immediate and long-term rewards.
+At its core, DRL operates through an agent-environment interaction, where the agent learns to make optimal decisions by balancing short-term rewards with long-term objectives. This approach is particularly relevant in financial applications, where decisions often carry delayed impacts and intricate trade-offs.
 
-#### Project Scope
-This project delves into the implementation, comparison, and analysis of various reinforcement learning algorithms within the context of Quantitative Wealth Investment Management (QWIM). The focus is on portfolio construction for diversified portfolios encompassing multiple asset classes. 
+### Project Scope
+This project explores the application of **Proximal Policy Optimization (PPO)**—a state-of-the-art DRL algorithm—in the domain of Quantitative Wealth Investment Management (QWIM). The focus is on portfolio optimization across diversified asset classes, including equities and ETFs, to achieve superior risk-adjusted returns.
 
-### Project Description
+## Project Description
 
-#### Objective
-Our primary goal is to explore how different RL algorithms can be effectively applied to QWIM. This involves developing an agent capable of constructing and managing a financial portfolio by learning from market data and maximizing long-term returns.
+### Objective
+The goal of this project is to demonstrate how advanced DRL algorithms can optimize financial portfolio management. Using PPO, the agent learns to construct and manage portfolios dynamically, adapting to evolving market conditions to maximize long-term financial returns.
 
-#### Key Features
-1. **Sequential Decision Making**: The agent learns an optimal action policy in a sequential decision process, continually adjusting its strategies based on accumulated experience.
-   
-2. **Maximizing Cumulative Reward**: The ultimate aim is to find an optimal policy that maps states of the financial world to sets of actions, maximizing the cumulative reward or long-term financial returns.
+### Key Features
+1. **Adaptive Decision-Making**:
+   - Utilizes PPO's dual-network structure (actor-critic models) for continuous policy updates and value evaluations.
+   - Ensures stability in decision-making through conservative policy adjustments.
 
-3. **Agent's Learning Process**: The agent sequentially learns and adapts its strategies. Each action taken by the agent not only affects immediate rewards but also impacts future states and subsequent rewards.
+2. **Maximizing Risk-Adjusted Returns**:
+   - Implements reward mechanisms based on metrics like the Sharpe Ratio to prioritize risk management alongside returns.
 
-4. **Exploration vs. Exploitation**: Balancing exploration (trying new strategies) and exploitation (leveraging known strategies) is crucial to the agent's success.
+3. **Portfolio Scalability**:
+   - Tests the agent's performance across small, medium, and large portfolios, showcasing its adaptability to varying levels of diversification and market volatility.
 
-#### Application
-The application of these algorithms focuses on portfolio optimization, including the selection, weighting, and rebalancing of various asset classes such as stocks, bonds, and ETFs.
+4. **Integration of Financial Constraints**:
+   - Incorporates mixed-integer programming and quadratic optimization to enhance portfolio selection and allocation.
 
-#### Data
-The project utilizes historical financial data, including price, volume, and other relevant market data, to train and evaluate the RL agents.
+### Application
+The project's applications include:
+- **Portfolio Construction**: Optimal selection, weighting, and rebalancing of assets.
+- **Risk Management**: Dynamic adjustments to market conditions and volatility.
+- **Performance Benchmarking**: Comparisons against baseline strategies such as Random Forest Regression and benchmark indices like the S&P 500.
 
-#### Evaluation Metrics
-- Sharpe Ratio: To assess risk-adjusted returns.
-- Total Returns: To evaluate overall financial performance.
-- Comparison with Benchmark Indices: To contextualize performance against traditional investment strategies.
+### Data
+The project leverages historical financial data (2001–2022) from ETFs covering diverse asset classes. Key features include price, volume, and economic indicators, with rigorous preprocessing to ensure stationarity.
 
-### Contribution
-This project contributes to the growing field of AI in finance by demonstrating the practical utility of advanced RL algorithms in making strategic investment decisions. It aims to showcase the potential of RL in navigating the complexities of modern financial markets, offering innovative solutions for portfolio management.
+### Evaluation Metrics
+- **Sharpe Ratio**: To evaluate risk-adjusted returns.
+- **Cumulative Returns**: To assess overall portfolio growth.
+- **Performance vs. Benchmarks**: To compare against traditional investment strategies.
+
+### Results
+- **Small Portfolio**: Achieved the highest Sharpe Ratio (2.01), demonstrating strong performance in aggressive, growth-oriented strategies.
+- **Medium Portfolio**: Maintained robust returns with balanced diversification and risk management.
+- **Large Portfolio**: Highlighted the benefits of long-term stability through broad diversification.
+
+## Contribution
+This project underscores the transformative potential of Deep Reinforcement Learning in finance, particularly through PPO. By integrating advanced DRL methodologies with financial optimization techniques, it establishes a robust framework for intelligent portfolio management.
+
+The findings advocate for continued exploration into the fusion of AI and quantitative finance, paving the way for innovative solutions in wealth and investment management.
