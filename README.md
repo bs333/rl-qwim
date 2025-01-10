@@ -1,5 +1,5 @@
-# Deep Reinforcement Learning in Quantitative Wealth Investment Management (QWIM)
-
+# Deep Reinforcement Learning in Quantitative Wealth Investment Management (QWIM) | Proximal Policy Optimization
+ 
 ## Overview
 
 ### Deep Reinforcement Learning (DRL) in Finance
